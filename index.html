@@ -3,237 +3,244 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rueda de la Fortuna - Fortuna Play™</title>
+  <title>Rueda de la Fortuna</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: url("https://iili.io/KFrecG4.md.jpg") no-repeat center center fixed;
+      background: url('https://iili.io/KFrecG4.md.jpg') no-repeat center center fixed;
       background-size: cover;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       text-align: center;
-      color: white;
+      color: #fff;
     }
-
+    header {
+      margin-top: 20px;
+    }
     header img {
       max-width: 150px;
-      margin-top: 15px;
+      height: auto;
+      margin-bottom: 10px;
     }
-
     h1 {
-      font-size: 2em;
-      font-weight: bold;
-      margin: 10px 0 20px 0;
-      color: gold;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.6);
+      color: #FFD700; /* Amarillo dorado */
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px #000;
     }
-
-    .wheel-container {
-      position: relative;
+    #rueda {
       width: 300px;
       height: 300px;
-    }
-
-    canvas {
-      width: 100%;
-      height: 100%;
+      margin: 0 auto;
       border-radius: 50%;
+      border: 8px solid #FFD700;
     }
-
-    .pointer {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
+    #flecha {
+      width: 0; height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-bottom: 30px solid red;
+      border-top: 30px solid red;
+      margin: 10px auto;
     }
-
-    button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      font-size: 1em;
-      font-weight: bold;
+    #girarBtn {
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 1.2rem;
       border: none;
       border-radius: 10px;
+      background: #FFD700;
+      color: #000;
       cursor: pointer;
-      background: linear-gradient(45deg, #ffcc00, #ff9900);
-      color: black;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
+      font-weight: bold;
+      box-shadow: 0 0 10px #000;
     }
-
-    button:disabled {
-      background: gray;
+    #girarBtn:disabled {
+      background: #999;
       cursor: not-allowed;
-      transform: none;
     }
-
-    button:hover:enabled {
-      transform: scale(1.05);
+    #popupPremio {
+      display: none;
+      background: rgba(0,0,0,0.9);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px auto;
+      width: 80%;
+      max-width: 400px;
     }
-
-    #result {
-      margin-top: 20px;
-      font-size: 1.2em;
-      font-weight: bold;
+    #contadorRueda {
+      margin: 30px auto;
+      font-size: 1rem;
+      color: #FFD700;
+      text-shadow: 1px 1px 3px #000;
     }
-
-    footer img {
-      max-width: 200px;
-      margin: 25px 0;
-    }
-
-    #counter {
-      margin: 20px 0;
-      font-size: 1.1em;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-      .wheel-container {
-        width: 240px;
-        height: 240px;
-      }
-      h1 {
-        font-size: 1.5em;
-      }
+    canvas#confetti {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://iili.io/KK0Gdb4.md.webp" alt="Logo Fortuna Play">
-    <h1>🎡 RUEDA DE LA FORTUNA by FORTUNA PLAY™ 🎡</h1>
-  </header>
 
-  <div class="wheel-container">
-    <canvas id="wheel" width="300" height="300"></canvas>
-    <div class="pointer"></div>
-  </div>
-  <button id="spin">GIRAR</button>
-  <p id="result"></p>
-  <button id="claim" style="display:none;">📲 Reclamar Premio</button>
+<header>
+  <img src="https://iili.io/KK0Gdb4.md.webp" alt="Logo Lucas Lucky™">
+  <h1>🎡 RUEDA DE LA FORTUNA 🎲</h1>
+</header>
 
-  <div id="counter">Hoy ya giraron la rueda: <span id="count">78</span> personas 🎰</div>
+<div id="flecha"></div>
+<canvas id="rueda"></canvas>
+<br>
+<button id="girarBtn">🎰 Girar</button>
 
-  <footer>
-    <img src="https://iili.io/KK0OCrl.md.png" alt="Fortuna Play Footer">
-  </footer>
+<div id="popupPremio">
+  <h2 id="premioGanado"></h2>
+  <p><strong>Fecha y hora:</strong> <span id="fechaHora"></span></p>
+  <button id="reclamarBtn">📲 Reclamar premio</button>
+  <button id="usuarioBtn" style="display:none;">🆕 Quiero un usuario</button>
+</div>
 
-  <script>
-    const wheel = document.getElementById("wheel");
-    const ctx = wheel.getContext("2d");
-    const spinBtn = document.getElementById("spin");
-    const resultP = document.getElementById("result");
-    const claimBtn = document.getElementById("claim");
+<p id="contadorRueda"></p>
+<canvas id="confetti"></canvas>
 
-    const premios = [
-      "300 fichas (con carga mínima)",
-      "500 fichas (con carga mínima)",
-      "100 fichas (sin carga)",
-      "15% extra en primera carga",
-      "25% extra en segunda carga",
-      "30% extra en tercera carga",
-      "200 fichas (con carga mínima)",
-      "¡Sigue participando!"
-    ];
+<script>
+/* 🎡 Script de la Rueda de la Fortuna 🎡 */
 
-    const colors = ["#ff9999","#66b3ff","#99ff99","#ffcc99","#c299ff","#ffff99","#ffb366","#b3ffb3"];
-    const slices = premios.length;
-    const sliceDeg = 360 / slices;
+// Premios
+const premios = [
+  "300 fichas (con carga mínima)",
+  "500 fichas (con carga mínima)",
+  "100 fichas (sin carga)",
+  "15% extra en primera carga",
+  "25% extra en segunda carga",
+  "30% extra en tercera carga",
+  "200 fichas (con carga mínima)",
+  "🎯 Seguí participando"
+];
 
-    // Dibuja la rueda
-    function drawWheel() {
-      for (let i = 0; i < slices; i++) {
-        ctx.beginPath();
-        ctx.moveTo(150,150);
-        ctx.arc(150,150,150, i*2*Math.PI/slices, (i+1)*2*Math.PI/slices);
-        ctx.fillStyle = colors[i];
-        ctx.fill();
-        ctx.save();
-        ctx.translate(150,150);
-        ctx.rotate((i+0.5)*2*Math.PI/slices);
-        ctx.fillStyle = "black";
-        ctx.font = "bold 12px Arial";
-        ctx.textAlign = "right";
-        ctx.fillText(premios[i], 140, 5);
-        ctx.restore();
-      }
-    }
-    drawWheel();
+// Cajeros rotadores
+const cajeros = [
+  {num:"541135555111",nombre:"Cajero 1"},
+  {num:"541135555222",nombre:"Cajero 2"},
+  {num:"541135555333",nombre:"Cajero 3"},
+  {num:"541135555444",nombre:"Cajero 4"},
+  {num:"541135555555",nombre:"Cajero 5"},
+  {num:"541135555666",nombre:"Cajero 6"},
+  {num:"541135555777",nombre:"Cajero 7"},
+];
 
-    let isSpinning = false;
+// Elementos
+const rueda = document.getElementById("rueda");
+const ctx = rueda.getContext("2d");
+const girarBtn = document.getElementById("girarBtn");
+const popupPremio = document.getElementById("popupPremio");
+const premioGanado = document.getElementById("premioGanado");
+const fechaHora = document.getElementById("fechaHora");
+const reclamarBtn = document.getElementById("reclamarBtn");
+const usuarioBtn = document.getElementById("usuarioBtn");
+const confettiCanvas = document.getElementById("confetti");
+const confettiCtx = confettiCanvas.getContext("2d");
 
-    function launchConfetti() {
-      const duration = 2000;
-      const end = Date.now() + duration;
-      (function frame() {
-        const colors = ['#bb0000', '#ffffff', '#00bb00', '#ffcc00'];
-        for (let i = 0; i < 10; i++) {
-          const div = document.createElement("div");
-          div.style.position = "fixed";
-          div.style.width = "8px";
-          div.style.height = "8px";
-          div.style.background = colors[Math.floor(Math.random()*colors.length)];
-          div.style.left = Math.random()*100 + "vw";
-          div.style.top = "-10px";
-          div.style.opacity = 0.8;
-          div.style.borderRadius = "50%";
-          document.body.appendChild(div);
-          const fall = (Math.random()*5+3) + "s";
-          div.animate([{ transform: "translateY(0)" }, { transform: "translateY(100vh)" }], { duration: parseFloat(fall)*1000, iterations: 1 });
-          setTimeout(()=>div.remove(), parseFloat(fall)*1000);
-        }
-        if (Date.now() < end) requestAnimationFrame(frame);
-      })();
-    }
+// Ajuste tamaño confeti
+confettiCanvas.width = window.innerWidth;
+confettiCanvas.height = window.innerHeight;
 
-    spinBtn.addEventListener("click", () => {
-      if (isSpinning) return;
-      isSpinning = true;
-      spinBtn.disabled = true;
-      resultP.textContent = "";
+// Dibujar rueda
+function dibujarRueda(rotacion=0){
+  const numSeg = premios.length;
+  const ang = 2*Math.PI/numSeg;
+  ctx.clearRect(0,0,rueda.width,rueda.height);
+  for(let i=0;i<numSeg;i++){
+    ctx.beginPath();
+    ctx.moveTo(rueda.width/2,rueda.height/2);
+    ctx.arc(rueda.width/2,rueda.height/2,rueda.width/2,i*ang+rotacion,(i+1)*ang+rotacion);
+    ctx.fillStyle=i%2===0?"#FFD700":"#FF4500";
+    ctx.fill();
+    ctx.save();
+    ctx.translate(rueda.width/2,rueda.height/2);
+    ctx.rotate(i*ang+rotacion+ang/2);
+    ctx.textAlign="right";
+    ctx.fillStyle="#fff";
+    ctx.font="14px Arial";
+    ctx.fillText(premios[i],rueda.width/2-10,5);
+    ctx.restore();
+  }
+}
+dibujarRueda();
 
-      let spinDeg = 360*5 + Math.floor(Math.random()*360);
-      let currentDeg = 0;
-      let step = 20;
-      const interval = setInterval(()=>{
-        currentDeg += step;
-        wheel.style.transform = `rotate(${currentDeg}deg)`;
-        if (currentDeg >= spinDeg) {
-          clearInterval(interval);
-          const finalDeg = currentDeg % 360;
-          const index = Math.floor((360 - finalDeg) / sliceDeg) % slices;
-          const premio = premios[index];
-          resultP.textContent = "Resultado: " + premio;
+// Girar ruleta
+girarBtn.onclick = ()=> {
+  girarBtn.disabled = true;
+  const premioIndex = Math.floor(Math.random()*premios.length);
+  const numSeg = premios.length;
+  const ang = 2*Math.PI/numSeg;
+  const targetAngle = (numSeg - premioIndex)*ang - ang/2;
+  const rotFinal = 10*Math.PI + targetAngle;
+  let start;
+  function anim(t){
+    if(!start) start=t;
+    const progress=(t-start)/4000;
+    const ease=1-Math.pow(1-progress,3);
+    const currentRot=rotFinal*ease;
+    dibujarRueda(currentRot);
+    if(progress<1) requestAnimationFrame(anim);
+    else mostrarPremio(premios[premioIndex]);
+  }
+  requestAnimationFrame(anim);
+};
 
-          if (premio !== "¡Sigue participando!") {
-            claimBtn.style.display = "inline-block";
-            launchConfetti();
-          } else {
-            claimBtn.style.display = "none";
-          }
+// Mostrar popup
+function mostrarPremio(premio){
+  const cajero=cajeros[Math.floor(Math.random()*cajeros.length)];
+  premioGanado.innerText=premio;
+  fechaHora.innerText=new Date().toLocaleString();
+  if(premio==="🎯 Seguí participando"){
+    usuarioBtn.style.display='inline-block';
+    reclamarBtn.style.display='none';
+  } else {
+    usuarioBtn.style.display='none';
+    reclamarBtn.style.display='inline-block';
+    crearConfeti();
+  }
+  popupPremio.style.display='block';
+  reclamarBtn.onclick=()=>window.open(`https://wa.me/${cajero.num}?text=${encodeURIComponent(`Hola ${cajero.nombre}, quiero reclamar mi premio de hoy "${premio}" (${new Date().toLocaleString()})`)}`,'_blank');
+  usuarioBtn.onclick=()=>window.open(`https://wa.me/${cajero.num}?text=${encodeURIComponent(`Hola ${cajero.nombre}, quiero crear mi usuario (${new Date().toLocaleString()})`)}`,'_blank');
+}
 
-          isSpinning = false;
-        }
-      }, 20);
-    });
+// 🎉 Confeti solo en premios reales
+let confettis=[];
+function crearConfeti(){
+  confettis=[];
+  for(let i=0;i<150;i++){
+    confettis.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height, r:Math.random()*6+4, dx:Math.random()-0.5, dy:Math.random()*3+2,color:`hsl(${Math.random()*360},100%,50%)`});
+  }
+  requestAnimationFrame(animarConfeti);
+}
+function animarConfeti(){
+  confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+  confettis.forEach(c=>{
+    c.x+=c.dx; c.y+=c.dy;
+    if(c.y>confettiCanvas.height) c.y=0;
+    confettiCtx.beginPath();
+    confettiCtx.arc(c.x,c.y,c.r,0,2*Math.PI);
+    confettiCtx.fillStyle=c.color;
+    confettiCtx.fill();
+  });
+  if(confettis.length>0) requestAnimationFrame(animarConfeti);
+}
 
-    // --- Contador dinámico ---
-    const countEl = document.getElementById("count");
-    let baseCount = 78;
-    setInterval(()=>{
-      baseCount += Math.floor(Math.random()*3);
-      countEl.textContent = baseCount;
-    }, 10000); // cada 10s suma un poco
-  </script>
+// Contador dinámico
+const contadorEl=document.getElementById('contadorRueda');
+function actualizarContadorRueda(){
+  const hoy=new Date().toISOString().slice(0,10);
+  let contadorData=JSON.parse(localStorage.getItem('contadorRueda'))||{};
+  if(contadorData.fecha!==hoy){ contadorData={fecha:hoy, cantidad:Math.floor(Math.random()*10)+50}; }
+  else{ contadorData.cantidad+=Math.floor(Math.random()*3); }
+  localStorage.setItem('contadorRueda',JSON.stringify(contadorData));
+  contadorEl.innerText=`${contadorData.cantidad} personas ya giraron la Rueda de la Fortuna hoy 🎡🎲`;
+}
+actualizarContadorRueda(); setInterval(actualizarContadorRueda,15000);
+</script>
+
 </body>
 </html>
