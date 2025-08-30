@@ -17,32 +17,56 @@ body {
 }
 .overlay{ min-height:100vh; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; padding:2rem 1rem; }
 h1{ font-size: clamp(2.5rem,8vw,5rem); background: linear-gradient(135deg, var(--dorado), var(--violeta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px var(--violeta),0 0 25px var(--dorado); margin:0; padding-top:0.5rem; }
-#ruleta-container{ margin:30px auto; position:relative; width:300px; height:300px; }
+#promo{ margin:1rem 0 2rem 0; font-size:1.2rem;}
+#ruleta-section{
+  margin: 50px auto;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0,0,0,0.5);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 360px;
+}
+#ruleta-container{ position:relative; width:300px; height:300px; }
 #flecha{ position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid var(--dorado); z-index:10; }
 button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.8rem; border:none; border-radius:50px; font-size:clamp(0.9rem,2vw,1.2rem); font-weight:bold; color:#fff; cursor:pointer; text-align:center; transition: transform 0.2s, box-shadow 0.2s; max-width:300px; justify-content:center;}
 .btn-green{ background: linear-gradient(135deg, var(--verde-oscuro), var(--verde)); box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde); animation:glow 2s infinite alternate;}
 .btn-gray{ background: linear-gradient(135deg, #666,var(--gris)); padding:0.6rem 1.5rem; box-shadow:0 0 8px #888,0 0 16px #555;}
 .btn:hover{ transform: scale(1.05); box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);}
 @keyframes glow{0%,100%{ box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde);} 50%{ box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);} }
+#premios-section{
+  margin: 30px auto;
+  background: rgba(0,0,0,0.4);
+  padding: 1.5rem 2rem;
+  border-radius: 15px;
+  max-width: 400px;
+  text-align: left;
+}
+#premios-section h2{ color: var(--dorado); text-align:center; margin-bottom:1rem; }
+#premios-section ol{ line-height:1.8; padding-left:1.2rem; }
 #popupPremio{ display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:#fff; padding:30px; border-radius:15px; text-align:center; z-index:999; width:90%; max-width:400px; box-shadow:0 0 15px rgba(0,0,0,0.7);}
 #popupPremio h2{ font-size:1.8rem; margin-bottom:10px; }
 #popupPremio p{ margin:5px 0; }
-#premios-lista{ margin-top:30px; text-align:left; max-width:400px; margin-left:auto; margin-right:auto; }
-#premios-lista ol{ line-height:1.8; }
 #mensajeExtra{ position: fixed; bottom: 10%; left:50%; transform:translateX(-50%); background: rgba(255,255,255,0.2); padding:10px 20px; border-radius:20px; font-size:1.2rem; display:none; }
-canvas{ position:fixed; top:0; left:0; pointer-events:none; z-index:1000; }
+canvas{ pointer-events:none; z-index:1000; }
 </style>
 </head>
 <body>
 <div class="overlay">
 <h1>🎡 GIRA LA RUEDA DE LA FORTUNA Y GANÁ 🎡</h1>
-<div id="ruleta-container">
-  <canvas id="ruletaCanvas" width="300" height="300"></canvas>
-  <div id="flecha"></div>
-</div>
-<button class="btn btn-green" id="girarBtn">Girar Ruleta</button>
+<div id="promo">¡Participá y llevate increíbles premios cada día! 🎲💎</div>
 
-<div id="premios-lista">
+<section id="ruleta-section">
+  <div id="ruleta-container">
+    <canvas id="ruletaCanvas" width="300" height="300"></canvas>
+    <div id="flecha"></div>
+  </div>
+  <button class="btn btn-green" id="girarBtn">Girar Ruleta</button>
+</section>
+
+<section id="premios-section">
+<h2>Premios de la Rueda</h2>
 <ol>
 <li>💎 300 fichas (c/carga mínima)</li>
 <li>💎 500 fichas (c/carga mínima)</li>
@@ -53,7 +77,7 @@ canvas{ position:fixed; top:0; left:0; pointer-events:none; z-index:1000; }
 <li>💎 200 fichas (c/carga mínima)</li>
 <li>🎯 Seguí participando</li>
 </ol>
-</div>
+</section>
 </div>
 
 <div id="popupPremio">
@@ -66,10 +90,10 @@ canvas{ position:fixed; top:0; left:0; pointer-events:none; z-index:1000; }
 <button id="usuarioBtn" class="btn btn-gray" style="display:none;">QUIERO UN USUARIO</button>
 </div>
 
-<div id="mensajeExtra"></div>
 <canvas id="confetiCanvas"></canvas>
 
 <script>
+// Configuración
 const CONTACTOS = [
   { nombre: 'Martin', num: '5491132525913' },
   { nombre: 'Lucas', num: '5491171334027' },
@@ -79,7 +103,6 @@ const CONTACTOS = [
   { nombre: 'Facu', num: '5491125127839' },
   { nombre: 'Ale', num: '5492615027973' }
 ];
-
 const premios = [
   "💎 300 fichas (c/carga mínima)",
   "💎 500 fichas (c/carga mínima)",
@@ -91,43 +114,36 @@ const premios = [
   "🎯 Seguí participando"
 ];
 const colores = ['#ff4d4d','#ffcc00','#66ccff','#cc66ff','#33cc33','#ff66cc','#ff9933','#9999ff'];
-
-const girarBtn = document.getElementById('girarBtn');
-const ruletaCanvas = document.getElementById('ruletaCanvas');
-const ctx = ruletaCanvas.getContext('2d');
-const popupPremio = document.getElementById('popupPremio');
-const premioGanado = document.getElementById('premioGanado');
-const fechaHora = document.getElementById('fechaHora');
-const reclamarBtn = document.getElementById('reclamarBtn');
-const usuarioBtn = document.getElementById('usuarioBtn');
-const mensajeExtra = document.getElementById('mensajeExtra');
-const confetiCanvas = document.getElementById('confetiCanvas');
-const confetiCtx = confetiCanvas.getContext('2d');
+const girarBtn=document.getElementById('girarBtn');
+const ruletaCanvas=document.getElementById('ruletaCanvas');
+const ctx=ruletaCanvas.getContext('2d');
+const popupPremio=document.getElementById('popupPremio');
+const premioGanado=document.getElementById('premioGanado');
+const fechaHora=document.getElementById('fechaHora');
+const reclamarBtn=document.getElementById('reclamarBtn');
+const usuarioBtn=document.getElementById('usuarioBtn');
+const confetiCanvas=document.getElementById('confetiCanvas');
+const confetiCtx=confetiCanvas.getContext('2d');
 confetiCanvas.width=window.innerWidth; confetiCanvas.height=window.innerHeight;
 
 const RUEDA_KEY="ultimaRueda";
 const CAJERO_KEY="cajeroAsignado";
-let angulo=0;
-let giroContador = parseInt(localStorage.getItem('contadorGiros') || "0",10);
-const numSectores = premios.length;
+let angulo=0; const numSectores=premios.length;
 
-// Dibuja ruleta
+// Funciones
 function dibujarRuleta(){
-  const centroX = ruletaCanvas.width/2;
-  const centroY = ruletaCanvas.height/2;
-  const radio = ruletaCanvas.width/2 -5;
-
+  const centroX=ruletaCanvas.width/2;
+  const centroY=ruletaCanvas.height/2;
+  const radio=ruletaCanvas.width/2-5;
   for(let i=0;i<numSectores;i++){
-    const inicio = (i*(2*Math.PI/numSectores)) + angulo;
-    const fin = ((i+1)*(2*Math.PI/numSectores)) + angulo;
+    const inicio=(i*(2*Math.PI/numSectores))+angulo;
+    const fin=((i+1)*(2*Math.PI/numSectores))+angulo;
     ctx.beginPath();
     ctx.moveTo(centroX,centroY);
     ctx.arc(centroX,centroY,radio,inicio,fin);
-    ctx.fillStyle = colores[i];
-    ctx.fill();
+    ctx.fillStyle=colores[i]; ctx.fill();
     ctx.strokeStyle="#fff"; ctx.stroke();
-
-    const angMedio = (inicio+fin)/2;
+    const angMedio=(inicio+fin)/2;
     ctx.save();
     ctx.translate(centroX+Math.cos(angMedio)*(radio/1.5), centroY+Math.sin(angMedio)*(radio/1.5));
     ctx.rotate(angMedio+Math.PI/2);
@@ -138,44 +154,34 @@ function dibujarRuleta(){
 }
 dibujarRuleta();
 
-// Confeti
-let confeti = [];
-function crearConfeti(){ confeti=[]; for(let i=0;i<150;i++){ confeti.push({x:Math.random()*confetiCanvas.width,y:Math.random()*confetiCanvas.height-confetiCanvas.height,r:Math.random()*6+4,d:Math.random()*20+10,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10}); } }
-function dibujarConfeti(){ confetiCtx.clearRect(0,0,confetiCanvas.width,confetiCanvas.height); confeti.forEach(c=>{ confetiCtx.beginPath(); confetiCtx.fillStyle=c.color; confetiCtx.moveTo(c.x+c.tilt,c.y); confetiCtx.lineTo(c.x+c.tilt+c.r/2,c.y+c.r); confetiCtx.lineTo(c.x+c.tilt-c.r/2,c.y+c.r); confetiCtx.closePath(); confetiCtx.fill(); c.y+=2; c.x+=Math.sin(c.y/10); if(c.y>confetiCanvas.height){c.y=-10; c.x=Math.random()*confetiCanvas.width;} }); requestAnimationFrame(dibujarConfeti); }
-
-// Rotador
-function puedeGirar(){ const ultima = localStorage.getItem(RUEDA_KEY); if(!ultima) return true; return Date.now()-parseInt(ultima,10)>24*60*60*1000; }
-function obtenerCajero(){ let index = localStorage.getItem(CAJERO_KEY); if(index!==null) return CONTACTOS[parseInt(index,10)]; const randomIndex = Math.floor(Math.random()*CONTACTOS.length); localStorage.setItem(CAJERO_KEY,randomIndex); return CONTACTOS[randomIndex]; }
-
-// Iluminar sector ganador
+// Rotador y giro
+function puedeGirar(){ const ultima=localStorage.getItem(RUEDA_KEY); return !ultima || (Date.now()-parseInt(ultima,10)>24*60*60*1000); }
+function obtenerCajero(){ let idx=localStorage.getItem(CAJERO_KEY); if(idx!==null) return CONTACTOS[parseInt(idx,10)]; const r=Math.floor(Math.random()*CONTACTOS.length); localStorage.setItem(CAJERO_KEY,r); return CONTACTOS[r]; }
 function iluminarSector(index){
-  const centroX = ruletaCanvas.width/2;
-  const centroY = ruletaCanvas.height/2;
-  const radio = ruletaCanvas.width/2 -5;
-  const inicio = (index*(2*Math.PI/numSectores)) + angulo;
-  const fin = ((index+1)*(2*Math.PI/numSectores)) + angulo;
-  ctx.beginPath();
-  ctx.moveTo(centroX,centroY);
-  ctx.arc(centroX,centroY,radio,inicio,fin);
-  ctx.fillStyle="rgba(255,255,255,0.3)";
-  ctx.fill();
+  const centroX=ruletaCanvas.width/2; const centroY=ruletaCanvas.height/2; const radio=ruletaCanvas.width/2-5;
+  const inicio=(index*(2*Math.PI/numSectores))+angulo; const fin=((index+1)*(2*Math.PI/numSectores))+angulo;
+  ctx.beginPath(); ctx.moveTo(centroX,centroY); ctx.arc(centroX,centroY,radio,inicio,fin); ctx.fillStyle="rgba(255,255,255,0.3)"; ctx.fill();
 }
 
-// Girar ruleta
-girarBtn.addEventListener('click',()=>{
-  if(!puedeGirar()){ alert("Ya giraste la ruleta hoy! Espera 24 hs."); return; }
-  const premioIndex = Math.floor(Math.random()*premios.length);
-  const vueltas = 5;
-  const gradosPorSector = 360/numSectores;
-  const totalGiro = vueltas*360 + premioIndex*gradosPorSector + Math.random()*gradosPorSector;
+function crearConfeti(){ let c=[]; for(let i=0;i<150;i++) c.push({x:Math.random()*confetiCanvas.width,y:Math.random()*confetiCanvas.height-confetiCanvas.height,r:Math.random()*6+4,d:Math.random()*20+10,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10}); return c; }
+let confeti=crearConfeti();
+function dibujarConfeti(){ confetiCtx.clearRect(0,0,confetiCanvas.width,confetiCanvas.height); confeti.forEach(c=>{ confetiCtx.beginPath(); confetiCtx.fillStyle=c.color; confetiCtx.moveTo(c.x+c.tilt,c.y); confetiCtx.lineTo(c.x+c.tilt+c.r/2,c.y+c.r); confetiCtx.lineTo(c.x+c.tilt-c.r/2,c.y+c.r); confetiCtx.closePath(); confetiCtx.fill(); c.y+=2; c.x+=Math.sin(c.y/10); if(c.y>confetiCanvas.height){c.y=-10;c.x=Math.random()*confetiCanvas.width;} }); requestAnimationFrame(dibujarConfeti); }
+dibujarConfeti();
 
-  let inicio = null; const startAngulo = angulo;
+girarBtn.onclick=()=>{
+  if(!puedeGirar()){ alert("Solo podes girar una vez cada 24 horas"); return; }
+  const premioIndex=Math.floor(Math.random()*premios.length);
+  const vueltas=5;
+  const gradosPorSector=360/numSectores;
+  const totalGiro=vueltas*360+premioIndex*gradosPorSector+Math.random()*gradosPorSector;
+  const startAngulo=angulo;
+  let inicio=null;
   function anim(timestamp){
     if(!inicio) inicio=timestamp;
-    const elapsed = timestamp - inicio;
-    const progress = Math.min(elapsed/5000,1);
-    const eased = 1-Math.pow(1-progress,3);
-    angulo = startAngulo + eased*(totalGiro*Math.PI/180);
+    const elapsed=timestamp-inicio;
+    const progress=Math.min(elapsed/5000,1);
+    const eased=1-Math.pow(1-progress,3);
+    angulo=startAngulo+eased*(totalGiro*Math.PI/180);
     ctx.clearRect(0,0,ruletaCanvas.width,ruletaCanvas.height);
     dibujarRuleta();
     if(progress<1) requestAnimationFrame(anim);
@@ -183,33 +189,32 @@ girarBtn.addEventListener('click',()=>{
   }
   requestAnimationFrame(anim);
   localStorage.setItem(RUEDA_KEY,Date.now());
-});
+}
 
 function finalizarPremio(index){
   iluminarSector(index);
-  crearConfeti(); dibujarConfeti();
-  const premio = premios[index];
-  const cajero = obtenerCajero();
-  const ahora = new Date();
+  const premio=premios[index];
+  const cajero=obtenerCajero();
+  const ahora=new Date();
   premioGanado.innerText=premio;
   fechaHora.innerText=`${ahora.toLocaleDateString()} ${ahora.toLocaleTimeString()}`;
   popupPremio.style.display='block';
-
   if(premio.includes("Seguí participando")){
     usuarioBtn.style.display='inline-flex';
     reclamarBtn.style.display='none';
-  } else {
+  } else{
     usuarioBtn.style.display='none';
     reclamarBtn.style.display='inline-flex';
   }
-
-  usuarioBtn.onclick=()=>{ openWhatsApp(cajero,"usuario"); popupPremio.style.display='none'; }
-  reclamarBtn.onclick=()=>{ openWhatsApp(cajero,premio); popupPremio.style.display='none'; }
+  usuarioBtn.onclick=()=>{ openWhatsApp(cajero,"usuario",premio); popupPremio.style.display='none'; }
+  reclamarBtn.onclick=()=>{ openWhatsApp(cajero,"premio",premio); popupPremio.style.display='none'; }
 }
 
-function openWhatsApp(cajero,premio){
-  let msg = `Hola ${cajero.nombre}, quiero reclamar mi premio de hoy "${premio}" ${new Date().toLocaleString()}`;
-  const url = `https://wa.me/${cajero.num}?text=${encodeURIComponent(msg)}`;
+function openWhatsApp(cajero,type,premio){
+  let msg="";
+  if(type==="usuario") msg=`Hola ${cajero.nombre}, quiero crear mi usuario. ${new Date().toLocaleString()}`;
+  else msg=`Hola ${cajero.nombre}, quiero reclamar mi premio de hoy "${premio}" ${new Date().toLocaleString()}`;
+  const url=`https://wa.me/${cajero.num}?text=${encodeURIComponent(msg)}`;
   window.open(url,'_blank','noopener,noreferrer');
 }
 </script>
