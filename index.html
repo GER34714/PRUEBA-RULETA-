@@ -16,8 +16,19 @@ body {
   background-size: cover; color:#fff; text-align:center;
 }
 .overlay{ min-height:100vh; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; padding:2rem 1rem; }
-h1{ font-size: clamp(2.5rem,8vw,5rem); background: linear-gradient(135deg, var(--dorado), var(--violeta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px var(--violeta),0 0 25px var(--dorado); margin:0; padding-top:0.5rem; }
+
+h1{
+  font-size: clamp(2.5rem,8vw,5rem);
+  background: linear-gradient(135deg, #FF0000, #FFD700); /* rojo a dorado */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px #FF0000,0 0 25px #FFD700;
+  margin:0;
+  padding-top:0.5rem;
+}
+
 #promo{ margin:1rem 0 2rem 0; font-size:1.2rem;}
+
 #ruleta-section{
   margin: 50px auto;
   display:flex;
@@ -30,11 +41,13 @@ h1{ font-size: clamp(2.5rem,8vw,5rem); background: linear-gradient(135deg, var(-
 }
 #ruleta-container{ position:relative; width:300px; height:300px; }
 #flecha{ position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid var(--dorado); z-index:10; }
+
 button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.8rem; border:none; border-radius:50px; font-size:clamp(0.9rem,2vw,1.2rem); font-weight:bold; color:#fff; cursor:pointer; text-align:center; transition: transform 0.2s, box-shadow 0.2s; max-width:300px; justify-content:center;}
 .btn-green{ background: linear-gradient(135deg, var(--verde-oscuro), var(--verde)); box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde); animation:glow 2s infinite alternate;}
 .btn-gray{ background: linear-gradient(135deg, #666,var(--gris)); padding:0.6rem 1.5rem; box-shadow:0 0 8px #888,0 0 16px #555;}
 .btn:hover{ transform: scale(1.05); box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);}
 @keyframes glow{0%,100%{ box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde);} 50%{ box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);} }
+
 #premios-section{
   margin: 30px auto;
   background: rgba(0,0,0,0.4);
@@ -45,11 +58,12 @@ button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 
 }
 #premios-section h2{ color: var(--dorado); text-align:center; margin-bottom:1rem; }
 #premios-section ol{ line-height:1.8; padding-left:1.2rem; }
+
 #popupPremio{ display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:#fff; padding:30px; border-radius:15px; text-align:center; z-index:999; width:90%; max-width:400px; box-shadow:0 0 15px rgba(0,0,0,0.7);}
 #popupPremio h2{ font-size:1.8rem; margin-bottom:10px; }
 #popupPremio p{ margin:5px 0; }
-#mensajeExtra{ position: fixed; bottom: 10%; left:50%; transform:translateX(-50%); background: rgba(255,255,255,0.2); padding:10px 20px; border-radius:20px; font-size:1.2rem; display:none; }
-canvas{ pointer-events:none; z-index:1000; }
+
+#confetiCanvas{ position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:998; }
 </style>
 </head>
 <body>
@@ -126,11 +140,9 @@ const confetiCanvas=document.getElementById('confetiCanvas');
 const confetiCtx=confetiCanvas.getContext('2d');
 confetiCanvas.width=window.innerWidth; confetiCanvas.height=window.innerHeight;
 
-const RUEDA_KEY="ultimaRueda";
-const CAJERO_KEY="cajeroAsignado";
 let angulo=0; const numSectores=premios.length;
+let confeti=[];
 
-// Funciones
 function dibujarRuleta(){
   const centroX=ruletaCanvas.width/2;
   const centroY=ruletaCanvas.height/2;
@@ -141,35 +153,48 @@ function dibujarRuleta(){
     ctx.beginPath();
     ctx.moveTo(centroX,centroY);
     ctx.arc(centroX,centroY,radio,inicio,fin);
-    ctx.fillStyle=colores[i]; ctx.fill();
-    ctx.strokeStyle="#fff"; ctx.stroke();
-    const angMedio=(inicio+fin)/2;
+    ctx.closePath();
+    ctx.fillStyle=colores[i%colores.length];
+    ctx.fill();
     ctx.save();
-    ctx.translate(centroX+Math.cos(angMedio)*(radio/1.5), centroY+Math.sin(angMedio)*(radio/1.5));
-    ctx.rotate(angMedio+Math.PI/2);
-    ctx.fillStyle="#fff"; ctx.font="bold 14px Arial"; ctx.textAlign="center";
-    ctx.fillText(i+1,0,0);
+    ctx.translate(centroX,centroY);
+    ctx.rotate((inicio+fin)/2);
+    ctx.fillStyle="#fff"; ctx.font="bold 14px sans-serif";
+    ctx.textAlign="right";
+    ctx.fillText(i+1,radio-10,5);
     ctx.restore();
   }
 }
 dibujarRuleta();
 
-// Rotador y giro
-function puedeGirar(){ const ultima=localStorage.getItem(RUEDA_KEY); return !ultima || (Date.now()-parseInt(ultima,10)>24*60*60*1000); }
-function obtenerCajero(){ let idx=localStorage.getItem(CAJERO_KEY); if(idx!==null) return CONTACTOS[parseInt(idx,10)]; const r=Math.floor(Math.random()*CONTACTOS.length); localStorage.setItem(CAJERO_KEY,r); return CONTACTOS[r]; }
-function iluminarSector(index){
-  const centroX=ruletaCanvas.width/2; const centroY=ruletaCanvas.height/2; const radio=ruletaCanvas.width/2-5;
-  const inicio=(index*(2*Math.PI/numSectores))+angulo; const fin=((index+1)*(2*Math.PI/numSectores))+angulo;
-  ctx.beginPath(); ctx.moveTo(centroX,centroY); ctx.arc(centroX,centroY,radio,inicio,fin); ctx.fillStyle="rgba(255,255,255,0.3)"; ctx.fill();
+// Confeti
+function crearConfeti(){
+  confeti=[];
+  for(let i=0;i<150;i++){
+    confeti.push({ x: Math.random()*confetiCanvas.width, y:Math.random()*confetiCanvas.height-confetiCanvas.height, r:Math.random()*6+4, d:Math.random()*20+10, color:`hsl(${Math.random()*360},100%,50%)`, tilt:Math.random()*10-10 });
+  }
+}
+function dibujarConfetiAnim(){
+  if(confeti.length===0) return;
+  confetiCtx.clearRect(0,0,confetiCanvas.width,confetiCanvas.height);
+  confeti.forEach(c=>{
+    confetiCtx.beginPath();
+    confetiCtx.fillStyle=c.color;
+    confetiCtx.moveTo(c.x+c.tilt,c.y);
+    confetiCtx.lineTo(c.x+c.tilt+c.r/2,c.y+c.r);
+    confetiCtx.lineTo(c.x+c.tilt-c.r/2,c.y+c.r);
+    confetiCtx.closePath();
+    confetiCtx.fill();
+    c.y+=2; c.x+=Math.sin(c.y/10);
+    if(c.y>confetiCanvas.height){ c.y=-10; c.x=Math.random()*confetiCanvas.width; }
+  });
+  requestAnimationFrame(dibujarConfetiAnim);
 }
 
-function crearConfeti(){ let c=[]; for(let i=0;i<150;i++) c.push({x:Math.random()*confetiCanvas.width,y:Math.random()*confetiCanvas.height-confetiCanvas.height,r:Math.random()*6+4,d:Math.random()*20+10,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10}); return c; }
-let confeti=crearConfeti();
-function dibujarConfeti(){ confetiCtx.clearRect(0,0,confetiCanvas.width,confetiCanvas.height); confeti.forEach(c=>{ confetiCtx.beginPath(); confetiCtx.fillStyle=c.color; confetiCtx.moveTo(c.x+c.tilt,c.y); confetiCtx.lineTo(c.x+c.tilt+c.r/2,c.y+c.r); confetiCtx.lineTo(c.x+c.tilt-c.r/2,c.y+c.r); confetiCtx.closePath(); confetiCtx.fill(); c.y+=2; c.x+=Math.sin(c.y/10); if(c.y>confetiCanvas.height){c.y=-10;c.x=Math.random()*confetiCanvas.width;} }); requestAnimationFrame(dibujarConfeti); }
-dibujarConfeti();
+// Cajero aleatorio
+function obtenerCajero(){ return CONTACTOS[Math.floor(Math.random()*CONTACTOS.length)]; }
 
 girarBtn.onclick=()=>{
-  if(!puedeGirar()){ alert("Solo podes girar una vez cada 24 horas"); return; }
   const premioIndex=Math.floor(Math.random()*premios.length);
   const vueltas=5;
   const gradosPorSector=360/numSectores;
@@ -188,24 +213,25 @@ girarBtn.onclick=()=>{
     else finalizarPremio(premioIndex);
   }
   requestAnimationFrame(anim);
-  localStorage.setItem(RUEDA_KEY,Date.now());
 }
 
 function finalizarPremio(index){
-  iluminarSector(index);
   const premio=premios[index];
   const cajero=obtenerCajero();
   const ahora=new Date();
   premioGanado.innerText=premio;
   fechaHora.innerText=`${ahora.toLocaleDateString()} ${ahora.toLocaleTimeString()}`;
   popupPremio.style.display='block';
+
   if(premio.includes("Seguí participando")){
     usuarioBtn.style.display='inline-flex';
     reclamarBtn.style.display='none';
   } else{
     usuarioBtn.style.display='none';
     reclamarBtn.style.display='inline-flex';
+    crearConfeti(); dibujarConfetiAnim();
   }
+
   usuarioBtn.onclick=()=>{ openWhatsApp(cajero,"usuario",premio); popupPremio.style.display='none'; }
   reclamarBtn.onclick=()=>{ openWhatsApp(cajero,"premio",premio); popupPremio.style.display='none'; }
 }
