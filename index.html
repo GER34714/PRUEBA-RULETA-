@@ -3,67 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fortuna Play™ - Rueda de la Fortuna</title>
+<title>Rueda de la Fortuna™</title>
 <style>
 :root {
   --verde: #25D366; --verde-oscuro: #128C7E; --gris: #555555;
   --violeta: #7d2ae8; --dorado: #FFD700;
 }
 *{box-sizing:border-box;}
-body {
-  margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body { margin:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://iili.io/KJmu0S2.jpg') no-repeat center center fixed;
   background-size: cover; color:#fff; text-align:center;
 }
 .overlay{ min-height:100vh; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; padding:2rem 1rem; }
-
-h1{
-  font-size: clamp(2.5rem,8vw,5rem);
-  background: linear-gradient(135deg, #FF0000, #FFD700); /* rojo a dorado */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 15px #FF0000,0 0 25px #FFD700;
-  margin:0;
-  padding-top:0.5rem;
-}
-
-#promo{ margin:1rem 0 2rem 0; font-size:1.2rem;}
-
-#ruleta-section{
-  margin: 50px auto;
-  display:flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(0,0,0,0.5);
-  padding: 2rem;
-  border-radius: 20px;
-  max-width: 360px;
-}
+h1{ font-size: clamp(2.5rem,8vw,5rem); background: linear-gradient(135deg, #FFF700, #FFD700);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow:0 0 10px #FFF700,0 0 15px #FFD700;
+ margin:0; padding-top:0.5rem; }
+#promo{ margin:1rem 0 2rem 0; font-size:1.2rem; }
+#ruleta-section{ margin: 50px auto; display:flex; flex-direction: column; align-items:center;
+ background: rgba(0,0,0,0.5); padding: 2rem; border-radius: 20px; max-width: 360px; }
 #ruleta-container{ position:relative; width:300px; height:300px; }
-#flecha{ position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid var(--dorado); z-index:10; }
-
-button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.8rem; border:none; border-radius:50px; font-size:clamp(0.9rem,2vw,1.2rem); font-weight:bold; color:#fff; cursor:pointer; text-align:center; transition: transform 0.2s, box-shadow 0.2s; max-width:300px; justify-content:center;}
-.btn-green{ background: linear-gradient(135deg, var(--verde-oscuro), var(--verde)); box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde); animation:glow 2s infinite alternate;}
-.btn-gray{ background: linear-gradient(135deg, #666,var(--gris)); padding:0.6rem 1.5rem; box-shadow:0 0 8px #888,0 0 16px #555;}
-.btn:hover{ transform: scale(1.05); box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);}
-@keyframes glow{0%,100%{ box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde);} 50%{ box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);} }
-
-#premios-section{
-  margin: 30px auto;
-  background: rgba(0,0,0,0.4);
-  padding: 1.5rem 2rem;
-  border-radius: 15px;
-  max-width: 400px;
-  text-align: left;
-}
+#flecha{ position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); width:0; height:0;
+ border-left:15px solid transparent; border-right:15px solid transparent; border-top:30px solid var(--dorado); z-index:10; }
+button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.8rem; border:none; border-radius:50px;
+ font-size:clamp(0.9rem,2vw,1.2rem); font-weight:bold; color:#fff; cursor:pointer; text-align:center; transition: transform 0.2s, box-shadow 0.2s;
+ max-width:300px; justify-content:center; }
+.btn-green{ background: linear-gradient(135deg, var(--verde-oscuro), var(--verde));
+box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde); animation:glow 2s infinite alternate; }
+.btn-gray{ background: linear-gradient(135deg, #666,var(--gris)); padding:0.6rem 1.5rem;
+box-shadow:0 0 8px #888,0 0 16px #555; }
+.btn:hover{ transform: scale(1.05); box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde); }
+@keyframes glow{0%,100{ box-shadow:0 0 10px var(--verde),0 0 20px var(--verde),0 0 30px var(--verde); }
+50%{ box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde); } }
+#premios-section{ margin:30px auto; background: rgba(0,0,0,0.4); padding: 1.5rem 2rem; border-radius: 15px; max-width:400px; text-align:left; }
 #premios-section h2{ color: var(--dorado); text-align:center; margin-bottom:1rem; }
 #premios-section ol{ line-height:1.8; padding-left:1.2rem; }
-
-#popupPremio{ display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:#fff; padding:30px; border-radius:15px; text-align:center; z-index:999; width:90%; max-width:400px; box-shadow:0 0 15px rgba(0,0,0,0.7);}
+#popupPremio{ display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+background:#222; color:#fff; padding:30px; border-radius:15px; text-align:center; z-index:999; width:90%; max-width:400px;
+box-shadow:0 0 15px rgba(0,0,0,0.7);}
 #popupPremio h2{ font-size:1.8rem; margin-bottom:10px; }
 #popupPremio p{ margin:5px 0; }
-
 #confetiCanvas{ position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:998; }
+#contadorRueda{ font-size:1.2rem; font-weight:bold; color:#FFD700; margin:20px 0; }
+@media(max-width:600px){ #ruleta-section{max-width:90%;} h1{font-size:clamp(2rem,10vw,4rem);} }
 </style>
 </head>
 <body>
@@ -72,11 +53,11 @@ button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 
 <div id="promo">¡Participá y llevate increíbles premios cada día! 🎲💎</div>
 
 <section id="ruleta-section">
-  <div id="ruleta-container">
-    <canvas id="ruletaCanvas" width="300" height="300"></canvas>
-    <div id="flecha"></div>
-  </div>
-  <button class="btn btn-green" id="girarBtn">Girar Ruleta</button>
+<div id="ruleta-container">
+<canvas id="ruletaCanvas" width="300" height="300"></canvas>
+<div id="flecha"></div>
+</div>
+<button class="btn btn-green" id="girarBtn">Girar Ruleta</button>
 </section>
 
 <section id="premios-section">
@@ -105,29 +86,23 @@ button.btn{ display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 
 </div>
 
 <canvas id="confetiCanvas"></canvas>
+<div id="contadorRueda"></div>
 
 <script>
-// Configuración
-const CONTACTOS = [
-  { nombre: 'Martin', num: '5491132525913' },
-  { nombre: 'Lucas', num: '5491171334027' },
-  { nombre: 'Cami', num: '5491156349123' },
-  { nombre: 'Octavio', num: '5491173566830' },
-  { nombre: 'Joaki', num: '5491123365501' },
-  { nombre: 'Facu', num: '5491125127839' },
-  { nombre: 'Ale', num: '5492615027973' }
+// Datos
+const CONTACTOS=[
+  {nombre:'Martin',num:'5491132525913'},
+  {nombre:'Lucas',num:'5491171334027'},
+  {nombre:'Cami',num:'5491156349123'},
+  {nombre:'Octavio',num:'5491173566830'},
+  {nombre:'Joaki',num:'5491123365501'},
+  {nombre:'Facu',num:'5491125127839'},
+  {nombre:'Ale',num:'5492615027973'}
 ];
-const premios = [
-  "💎 300 fichas (c/carga mínima)",
-  "💎 500 fichas (c/carga mínima)",
-  "💎 100 fichas (sin carga)",
-  "🎉 15% extra en tu 1ra carga",
-  "🎉 25% extra en tu 2da carga",
-  "🎉 30% extra en tu 3ra carga",
-  "💎 200 fichas (c/carga mínima)",
-  "🎯 Seguí participando"
-];
-const colores = ['#ff4d4d','#ffcc00','#66ccff','#cc66ff','#33cc33','#ff66cc','#ff9933','#9999ff'];
+const premios=["💎 300 fichas (c/carga mínima)","💎 500 fichas (c/carga mínima)","💎 100 fichas (sin carga)","🎉 15% extra en tu 1ra carga","🎉 25% extra en tu 2da carga","🎉 30% extra en tu 3ra carga","💎 200 fichas (c/carga mínima)","🎯 Seguí participando"];
+const colores=['#ffcc00','#ffd700','#ffff33','#ffee44','#ffdd11','#ffee77','#ffff88','#ffcc33'];
+
+// Canvas y botones
 const girarBtn=document.getElementById('girarBtn');
 const ruletaCanvas=document.getElementById('ruletaCanvas');
 const ctx=ruletaCanvas.getContext('2d');
@@ -140,109 +115,92 @@ const confetiCanvas=document.getElementById('confetiCanvas');
 const confetiCtx=confetiCanvas.getContext('2d');
 confetiCanvas.width=window.innerWidth; confetiCanvas.height=window.innerHeight;
 
-let angulo=0; const numSectores=premios.length;
-let confeti=[];
+// Variables ruleta
+let angulo=0; let numSectores=premios.length; let confeti=[];
 
+// Dibujar ruleta
 function dibujarRuleta(){
-  const centroX=ruletaCanvas.width/2;
-  const centroY=ruletaCanvas.height/2;
-  const radio=ruletaCanvas.width/2-5;
+  const cx=ruletaCanvas.width/2, cy=ruletaCanvas.height/2, radio=ruletaCanvas.width/2-5;
   for(let i=0;i<numSectores;i++){
     const inicio=(i*(2*Math.PI/numSectores))+angulo;
     const fin=((i+1)*(2*Math.PI/numSectores))+angulo;
-    ctx.beginPath();
-    ctx.moveTo(centroX,centroY);
-    ctx.arc(centroX,centroY,radio,inicio,fin);
-    ctx.closePath();
-    ctx.fillStyle=colores[i%colores.length];
-    ctx.fill();
-    ctx.save();
-    ctx.translate(centroX,centroY);
-    ctx.rotate((inicio+fin)/2);
-    ctx.fillStyle="#fff"; ctx.font="bold 14px sans-serif";
-    ctx.textAlign="right";
-    ctx.fillText(i+1,radio-10,5);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radio,inicio,fin); ctx.closePath();
+    ctx.fillStyle=colores[i%colores.length]; ctx.fill();
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate((inicio+fin)/2);
+    ctx.fillStyle="#000"; ctx.font="bold 14px sans-serif"; ctx.textAlign="right"; ctx.fillText(i+1,radio-10,5);
     ctx.restore();
   }
 }
 dibujarRuleta();
 
 // Confeti
-function crearConfeti(){
-  confeti=[];
-  for(let i=0;i<150;i++){
-    confeti.push({ x: Math.random()*confetiCanvas.width, y:Math.random()*confetiCanvas.height-confetiCanvas.height, r:Math.random()*6+4, d:Math.random()*20+10, color:`hsl(${Math.random()*360},100%,50%)`, tilt:Math.random()*10-10 });
-  }
-}
-function dibujarConfetiAnim(){
-  if(confeti.length===0) return;
-  confetiCtx.clearRect(0,0,confetiCanvas.width,confetiCanvas.height);
-  confeti.forEach(c=>{
-    confetiCtx.beginPath();
-    confetiCtx.fillStyle=c.color;
-    confetiCtx.moveTo(c.x+c.tilt,c.y);
-    confetiCtx.lineTo(c.x+c.tilt+c.r/2,c.y+c.r);
-    confetiCtx.lineTo(c.x+c.tilt-c.r/2,c.y+c.r);
-    confetiCtx.closePath();
-    confetiCtx.fill();
-    c.y+=2; c.x+=Math.sin(c.y/10);
-    if(c.y>confetiCanvas.height){ c.y=-10; c.x=Math.random()*confetiCanvas.width; }
-  });
-  requestAnimationFrame(dibujarConfetiAnim);
+function crearConfeti(){ confeti=[]; for(let i=0;i<150;i++){ confeti.push({x:Math.random()*confetiCanvas.width,y:Math.random()*confetiCanvas.height-confetiCanvas.height,r:Math.random()*6+4,d:Math.random()*20+10,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10}); } }
+function dibujarConfetiAnim(){ if(confeti.length===0) return; confetiCtx.clearRect(0,0,confetiCanvas.width,confetiCanvas.height);
+confeti.forEach(c=>{ confetiCtx.beginPath(); confetiCtx.fillStyle=c.color; confetiCtx.moveTo(c.x+c.tilt,c.y); confetiCtx.lineTo(c.x+c.tilt+c.r/2,c.y+c.r); confetiCtx.lineTo(c.x+c.tilt-c.r/2,c.y+c.r); confetiCtx.closePath(); confetiCtx.fill();
+c.y+=2; c.x+=Math.sin(c.y/10); if(c.y>confetiCanvas.height){ c.y=-10; c.x=Math.random()*confetiCanvas.width; }}); requestAnimationFrame(dibujarConfetiAnim); }
+
+// Cajero asignado
+function obtenerCajero(){
+  let cajero=JSON.parse(localStorage.getItem("cajero"));
+  if(!cajero){ cajero=CONTACTOS[Math.floor(Math.random()*CONTACTOS.length)]; localStorage.setItem("cajero",JSON.stringify(cajero)); }
+  return cajero;
 }
 
-// Cajero aleatorio
-function obtenerCajero(){ return CONTACTOS[Math.floor(Math.random()*CONTACTOS.length)]; }
+// Verificar giro diario
+function puedeGirar(){
+  const hoy=new Date().toISOString().slice(0,10);
+  const data=JSON.parse(localStorage.getItem("giroRueda")||'{}');
+  return data.fecha!==hoy;
+}
+function registrarGiro(){
+  const hoy=new Date().toISOString().slice(0,10);
+  localStorage.setItem("giroRueda",JSON.stringify({fecha:hoy}));
+}
 
+// Girar ruleta
 girarBtn.onclick=()=>{
+  if(!puedeGirar()){ alert("Ya giraste la ruleta hoy! Vuelve mañana."); return; }
+  registrarGiro();
+  girarBtn.disabled=true;
+
   const premioIndex=Math.floor(Math.random()*premios.length);
-  const vueltas=5;
-  const gradosPorSector=360/numSectores;
-  const totalGiro=vueltas*360+premioIndex*gradosPorSector+Math.random()*gradosPorSector;
-  const startAngulo=angulo;
-  let inicio=null;
+  const vueltas=5; const gradosPorSector=360/numSectores;
+  const totalGiro=vueltas*360 + premioIndex*gradosPorSector + gradosPorSector/2;
+  const startAngulo=angulo; const duracion=4000; const inicioTime=performance.now();
   function anim(timestamp){
-    if(!inicio) inicio=timestamp;
-    const elapsed=timestamp-inicio;
-    const progress=Math.min(elapsed/5000,1);
-    const eased=1-Math.pow(1-progress,3);
-    angulo=startAngulo+eased*(totalGiro*Math.PI/180);
+    const elapsed=timestamp-inicioTime; const progress=Math.min(elapsed/duracion,1);
+    angulo=startAngulo + (totalGiro*Math.PI/180)*progress;
     ctx.clearRect(0,0,ruletaCanvas.width,ruletaCanvas.height);
     dibujarRuleta();
     if(progress<1) requestAnimationFrame(anim);
-    else finalizarPremio(premioIndex);
+    else mostrarPremio(premios[premioIndex]);
   }
   requestAnimationFrame(anim);
 }
 
-function finalizarPremio(index){
-  const premio=premios[index];
+// Mostrar popup
+function mostrarPremio(premio){
   const cajero=obtenerCajero();
-  const ahora=new Date();
   premioGanado.innerText=premio;
-  fechaHora.innerText=`${ahora.toLocaleDateString()} ${ahora.toLocaleTimeString()}`;
+  fechaHora.innerText=new Date().toLocaleString();
+  if(premio==="🎯 Seguí participando"){ usuarioBtn.style.display='inline-block'; reclamarBtn.style.display='none'; }
+  else{ usuarioBtn.style.display='none'; reclamarBtn.style.display='inline-block'; crearConfeti(); dibujarConfetiAnim(); }
   popupPremio.style.display='block';
-
-  if(premio.includes("Seguí participando")){
-    usuarioBtn.style.display='inline-flex';
-    reclamarBtn.style.display='none';
-  } else{
-    usuarioBtn.style.display='none';
-    reclamarBtn.style.display='inline-flex';
-    crearConfeti(); dibujarConfetiAnim();
-  }
-
-  usuarioBtn.onclick=()=>{ openWhatsApp(cajero,"usuario",premio); popupPremio.style.display='none'; }
-  reclamarBtn.onclick=()=>{ openWhatsApp(cajero,"premio",premio); popupPremio.style.display='none'; }
+  reclamarBtn.onclick=()=>{ window.open(`https://wa.me/${cajero.num}?text=${encodeURIComponent(`Hola ${cajero.nombre}, quiero reclamar mi premio de hoy "${premio}" ${new Date().toLocaleString()}`)}`,'_blank'); popupPremio.style.display='none'; }
+  usuarioBtn.onclick=()=>{ window.open(`https://wa.me/${cajero.num}?text=${encodeURIComponent(`Hola ${cajero.nombre}, quiero crear mi usuario ${new Date().toLocaleString()}`)}`,'_blank'); popupPremio.style.display='none'; }
 }
 
-function openWhatsApp(cajero,type,premio){
-  let msg="";
-  if(type==="usuario") msg=`Hola ${cajero.nombre}, quiero crear mi usuario. ${new Date().toLocaleString()}`;
-  else msg=`Hola ${cajero.nombre}, quiero reclamar mi premio de hoy "${premio}" ${new Date().toLocaleString()}`;
-  const url=`https://wa.me/${cajero.num}?text=${encodeURIComponent(msg)}`;
-  window.open(url,'_blank','noopener,noreferrer');
+// Contador dinámico
+const contadorEl=document.getElementById('contadorRueda');
+function actualizarContadorRueda(){
+  const hoy=new Date().toISOString().slice(0,10);
+  let contadorData=JSON.parse(localStorage.getItem('contadorRueda'))||{};
+  if(contadorData.fecha!==hoy){ contadorData={fecha:hoy, cantidad:Math.floor(Math.random()*10)+50}; }
+  else{ contadorData.cantidad+=Math.floor(Math.random()*3); }
+  localStorage.setItem('contadorRueda',JSON.stringify(contadorData));
+  contadorEl.innerText=`${contadorData.cantidad} personas ya giraron la Rueda de la Fortuna hoy 🎡🎲`;
 }
+actualizarContadorRueda(); setInterval(actualizarContadorRueda,15000);
 </script>
 </body>
 </html>
