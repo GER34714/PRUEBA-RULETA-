@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fortuna Play™</title>
+<meta name="description" content="🎰 FortunaPlay - Tu nueva experiencia de juego online. Unite y participá con nosotros por premios increíbles.">
+
+<!-- Etiquetas Open Graph -->
+<meta property="og:title" content="Fortuna Play™">
+<meta property="og:description" content="Tu nueva experiencia de juego online. Unite y participá con premios increíbles.">
+<meta property="og:image" content="https://iili.io/KJmu0S2.jpg">
+<meta property="og:url" content="https://tusitio.com/">
+<meta property="og:type" content="website">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="https://iili.io/KJpXWH7.jpg">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-502569916"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-502569916');
+</script>
+
+<style>
+:root {
+  --verde: #25D366;
+  --verde-oscuro: #128C7E;
+  --gris: #555555;
+  --violeta: #7d2ae8;
+  --dorado: #FFD700;
+}
+
+*{box-sizing:border-box;}
+body {
+  margin:0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://iili.io/KJmu0S2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  text-align: center;
+}
+
+.overlay {
+  min-height: 100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  padding:2rem 1rem;
+}
+
+h1 {
+  font-size: clamp(3rem,8vw,6rem);
+  background: linear-gradient(135deg, var(--dorado), var(--violeta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px var(--violeta), 0 0 25px var(--dorado);
+  margin:0;
+  padding-top:0.5rem;
+}
+
+#promo {
+  font-size: clamp(1rem,2vw,1.5rem);
+  margin:1.5rem 0 4rem 0;
+  line-height:1.4;
+  max-width:90%;
+}
+
+.button-group{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  align-items:center;
+  width:100%;
+}
+
+#btn-usuario-wrapper {
+  margin-top:auto;
+  margin-bottom:1rem;
+}
+
+#contador {
+  font-size: clamp(1rem,2vw,1.3rem);
+  font-weight: bold;
+  margin:1rem 0 1rem 0;
+  color: var(--dorado);
+  text-shadow: 0 0 10px var(--violeta);
+}
+
+.text-legal {
+  font-size: clamp(0.7rem,1.5vw,0.85rem);
+  color: #ccc;
+  max-width: 90%;
+  margin-top:1rem;
+  line-height:1.3;
+}
+
+.btn {
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.8rem 1.8rem;
+  border:none;
+  border-radius:50px;
+  font-size:clamp(0.9rem,2vw,1.2rem);
+  font-weight:bold;
+  color:#fff;
+  cursor:pointer;
+  text-decoration:none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align:center;
+  max-width:300px;
+  justify-content:center;
+}
+
+.btn-green { 
+  background: linear-gradient(135deg, var(--verde-oscuro), var(--verde)); 
+  box-shadow: 0 0 10px var(--verde), 0 0 20px var(--verde), 0 0 30px var(--verde);
+  animation: glow 2s infinite alternate;
+}
+
+.btn-gray { 
+  background: linear-gradient(135deg, #666, var(--gris)); 
+  padding:0.6rem 1.5rem; 
+  box-shadow: 0 0 8px #888, 0 0 16px #555;
+}
+
+.btn:hover { 
+  transform: scale(1.05); 
+  box-shadow:0 0 20px var(--verde),0 0 40px var(--verde),0 0 60px var(--verde);
+}
+
+.btn img{ width:24px; height:24px; }
+
+@keyframes glow {
+  0%,100% { box-shadow: 0 0 10px var(--verde), 0 0 20px var(--verde), 0 0 30px var(--verde); }
+  50% { box-shadow: 0 0 20px var(--verde), 0 0 40px var(--verde), 0 0 60px var(--verde); }
+}
+
+@media (max-width:600px){
+  .overlay{padding:1rem;}
+  h1{font-size: clamp(2.5rem,10vw,4rem);}
+  #promo{margin:1.2rem 0 3rem 0;}
+  .btn{width:80%;}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+  <h1>Fortuna Play™</h1>
+  <div id="promo">
+    Te creamos el usuario al instante!<br>
+    ¡Te lo vas a perder? 🎲💎
+  </div>
+
+  <div id="btn-usuario-wrapper" class="button-group">
+    <button class="btn btn-green" id="btn-usuario">
+      <img src="https://iili.io/KJpXWH7.jpg" alt="WhatsApp">
+      Quiero mi usuario
+    </button>
+  </div>
+
+  <div id="contador">Actualmente hay 0 jugadores conectados 🎲</div>
+
+  <div class="button-group">
+    <button class="btn btn-gray" id="btn-dudas">
+      <img src="https://iili.io/KJpXWH7.jpg" alt="WhatsApp">
+      DUDAS? Escribinos
+    </button>
+  </div>
+
+  <div class="text-legal">
+    Los premios son otorgados bajo términos y condiciones. +18
+  </div>
+</div>
+
+<script>
+const CONTACTOS = [
+  { nombre: 'Martin', num: '5491132525913' },
+  { nombre: 'Lucas', num: '5491171334027' },
+  { nombre: 'Cami', num: '5491156349123' },
+  { nombre: 'Octavio', num: '5491173566830' },
+  { nombre: 'Joaki', num: '5491123365501' },
+  { nombre: 'Facu', num: '5491125127839' },
+  { nombre: 'Ale', num: '5492615027973' }
+];
+
+// Selección 100% aleatoria
+function siguienteContacto() {
+  const randomIndex = Math.floor(Math.random() * CONTACTOS.length);
+  return CONTACTOS[randomIndex];
+}
+
+// Bloqueo botón usuario
+const BTN = document.getElementById('btn-usuario');
+const BLOQUEO_KEY = "btnBloqueadoHasta";
+
+function bloquearBoton() {
+  BTN.disabled = true;
+  BTN.innerText = 'Ya te contactaste revisa tu WhatsApp! Mucha suerte 📲😊';
+}
+
+function restaurarBoton() {
+  BTN.disabled = false;
+  BTN.innerHTML = `<img src="https://iili.io/KJpXWH7.jpg" alt="WhatsApp"> Quiero mi usuario`;
+}
+
+function verificarBloqueo() {
+  const ahora = Date.now();
+  const hasta = parseInt(localStorage.getItem(BLOQUEO_KEY) || "0", 10);
+  if (ahora < hasta) {
+    bloquearBoton();
+    setTimeout(restaurarBoton, hasta - ahora);
+  }
+}
+
+// Abrir WhatsApp
+function openWhatsApp(type) {
+  const contacto = siguienteContacto();
+  let msg = '';
+
+  if (type === 'usuario') {
+    msg = `Hola ${contacto.nombre}, vengo de tu sitio web! Me creas un usuario?`;
+  } else {
+    msg = `Hola ${contacto.nombre}, me podes dar más info?`;
+  }
+
+  const url = `https://wa.me/${contacto.num}?text=${encodeURIComponent(msg)}`;
+  const w = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!w) location.href = url;
+
+  gtag('event', type === 'usuario' ? 'click_usuario' : 'click_dudas', {
+    'whatsapp_number': contacto.num,
+    'whatsapp_name': contacto.nombre
+  });
+
+  if (type === 'usuario') {
+    bloquearBoton();
+    const desbloqueo = Date.now() + 180000; // 3 minutos
+    localStorage.setItem(BLOQUEO_KEY, desbloqueo);
+    setTimeout(restaurarBoton, 180000);
+  }
+}
+
+BTN.addEventListener('click', () => openWhatsApp('usuario'));
+document.getElementById('btn-dudas').addEventListener('click', () => openWhatsApp('dudas'));
+
+// Contador aleatorio
+function actualizarContador(){
+  const base = 230;
+  const variacion = Math.floor(Math.random()*40);
+  const total = base + variacion;
+  document.getElementById("contador").innerText = `Actualmente hay ${total} jugadores conectados       🎰🎲`;
+}
+actualizarContador();
+setInterval(actualizarContador, 5000);
+
+// Verificar bloqueo al cargar
+verificarBloqueo();
+</script>
+
+</body>
+</html>
