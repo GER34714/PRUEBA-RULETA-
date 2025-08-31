@@ -3,60 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FORTUNA PLAY™ - Neon</title>
+<title>FORTUNA PLAY™</title>
 <style>
-body{margin:0;font-family:Arial Black,sans-serif;text-align:center;color:#fff;background:#000;overflow-x:hidden;}
-/* Halo pulsante */
-.pulseNeon{position:relative;display:inline-block;}
-.pulseNeon::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:120%;border-radius:50%;background:radial-gradient(circle,#ff00ff,#00ffff,#ff9900,#ff00ff);z-index:-1;animation:pulseAnim 2s infinite alternate;}
-@keyframes pulseAnim{0%{transform:translate(-50%,-50%) scale(0.9);opacity:0.6;}50%{transform:translate(-50%,-50%) scale(1.05);opacity:1;}100%{transform:translate(-50%,-50%) scale(0.95);opacity:0.7;}}
-
-/* Rueda con halo */
+body{margin:0;font-family:Arial Black,sans-serif;text-align:center;color:#fff;background:#000;}
+#logoTop{width:360px;margin:15px auto;display:block;}
+#subtitle{font-size:1.6rem;margin:5px 0;color:#ff0;font-weight:bold;text-shadow:0 0 5px #fff,0 0 10px #ff0;animation:neonSubtitle 1.5s infinite alternate;}
+@keyframes neonSubtitle{0%{text-shadow:0 0 5px #fff,0 0 10px #ff0}50%{text-shadow:0 0 10px #fff,0 0 20px #ff0}100%{text-shadow:0 0 5px #fff,0 0 10px #ff0}}
 #wheelContainer{position:relative;width:400px;margin:10px auto;}
-#wheelHalo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120%;height:120%;border-radius:50%;background:radial-gradient(circle,#ff00ff,#00ffff,#ff9900,#ff00ff);animation:pulseAnim 2s infinite alternate;z-index:0;}
-#wheelCanvas{width:100%;height:auto;display:block;position:relative;z-index:1;}
-
-#arrow{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid #fff;z-index:2}
-
-#subtitle{font-size:1.6rem;margin:5px 0;color:#ff0;font-weight:bold;text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f;animation:neonSubtitle 1.5s ease-in-out infinite alternate;}
-@keyframes neonSubtitle{from{text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0}to{text-shadow:0 0 10px #fff,0 0 20px #ff0,0 0 25px #f0f}}
-
-button{margin:10px;padding:12px 30px;font-size:1.1rem;border:none;border-radius:50px;cursor:pointer;transition:.3s}
-#spinButton{background:#ff0;color:#4b0082}
-
-/* Popup premio */
-#winnerPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.95);padding:20px 25px;border-radius:15px;color:#fff;font-size:1.4rem;font-weight:bold;text-align:center;z-index:1000;transition:transform 0.5s cubic-bezier(0.68,-0.55,0.27,1.55)}
-#winnerPopup.show{transform:translate(-50%,-50%) scale(1);animation:winnerBounce 0.8s ease forwards}
-@keyframes winnerBounce{0%{transform:translate(-50%,-50%) scale(0);}50%{transform:translate(-50%,-50%) scale(1.2);}70%{transform:translate(-50%,-50%) scale(0.95);}100%{transform:translate(-50%,-50%) scale(1);}}
-#winnerButton{margin-top:15px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;transition:.3s}
-#winnerButton:hover{transform:scale(1.08)}
-
+#wheelCanvas{width:100%;height:auto;}
+#arrow{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid #fff;}
+button{margin:10px;padding:12px 30px;font-size:1.2rem;border:none;border-radius:50px;cursor:pointer;transition:.3s}
+#spinButton{background:#ff0;color:#4b0082;}
+#winnerPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.95);padding:20px 25px;border-radius:15px;color:#fff;font-size:1.4rem;text-align:center;z-index:1000;transition:transform .5s;}
+#winnerPopup.show{transform:translate(-50%,-50%) scale(1);}
+#winnerButton{margin-top:15px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;}
+#winnerButton:hover{transform:scale(1.08);}
+#finalImage{width:180px;margin:15px auto;display:block;}
 #legal,#rights{font-size:0.9rem;margin:2px 0;color:#fff}
 canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
 </style>
 </head>
 <body>
 
-<div class="pulseNeon"><img id="logoTop" src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY" style="width:360px"></div>
+<img id="logoTop" src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY">
 <div id="subtitle">Animate a girar, es tu momento de brillar!</div>
 
 <div id="wheelContainer">
-  <div id="wheelHalo"></div>
   <canvas id="wheelCanvas" width="400" height="400"></canvas>
   <div id="arrow"></div>
 </div>
 
 <button id="spinButton">GIRAR</button>
 
-<div class="pulseNeon" style="margin-top:15px;"><img id="finalImage" src="https://iili.io/KK0OCrl.md.png" alt="Imagen final" style="width:180px"></div>
-<div id="legal">+18 | Juego Responsable | Apuesta con moderación</div>
-<div id="rights">Todos los derechos reservados FORTUNA PLAY™</div>
-
 <div id="winnerPopup">
   <canvas id="confetti"></canvas>
   <div id="winnerMessage"></div>
   <button id="winnerButton">Solicitar premio</button>
 </div>
+
+<img id="finalImage" src="https://iili.io/KK0OCrl.md.png" alt="Imagen final">
+<div id="legal">+18 | Juego Responsable | Apuesta con moderación</div>
+<div id="rights">Todos los derechos reservados FORTUNA PLAY™</div>
 
 <script>
 // Premios y cajeros
@@ -69,7 +56,6 @@ const prizes=[
   "500 fichas (sin carga,no ret.)",
   "300 fichas (sin carga ,no ret.)"
 ];
-
 const cashiers=[
   {nombre:'Martin',num:'5491132525913'},
   {nombre:'Lucas',num:'5491171334027'},
@@ -98,7 +84,8 @@ function drawWheel(){
 drawWheel();
 
 // Confetti y popup
-const spinBtn=document.getElementById('spinButton'),popup=document.getElementById('winnerPopup'),winnerMsg=document.getElementById('winnerMessage'),winnerBtn=document.getElementById('winnerButton'),confCanvas=document.getElementById('confetti'),confCtx=confCanvas.getContext('2d');confCanvas.width=popup.offsetWidth;confCanvas.height=popup.offsetHeight;let confettiParticles=[];
+const spinBtn=document.getElementById('spinButton'),popup=document.getElementById('winnerPopup'),winnerMsg=document.getElementById('winnerMessage'),winnerBtn=document.getElementById('winnerButton'),confCanvas=document.getElementById('confetti'),confCtx=confCanvas.getContext('2d');
+confCanvas.width=popup.offsetWidth;confCanvas.height=popup.offsetHeight;let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
