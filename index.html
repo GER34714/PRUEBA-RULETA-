@@ -7,7 +7,10 @@
 <style>
 body{margin:0;font-family:Arial Black,sans-serif;text-align:center;color:#fff;background:linear-gradient(135deg,#4b0082,#ff00ff,#00ff00,#ff9900);background-size:400% 400%;animation:gradientBG 15s ease infinite}
 @keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-h1{font-size:2rem;margin:10px 0}
+h1{font-size:2rem;margin:10px 0;text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f;animation:neonTitle 1.5s ease-in-out infinite alternate}
+@keyframes neonTitle{from{text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f}to{text-shadow:0 0 10px #fff,0 0 20px #ff0,0 0 25px #f0f}}
+#subtitle{font-size:1.2rem;margin:5px 0;color:#ff0;font-weight:bold;text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f;animation:neonSubtitle 1.5s ease-in-out infinite alternate}
+@keyframes neonSubtitle{from{text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f}to{text-shadow:0 0 10px #fff,0 0 20px #ff0,0 0 25px #f0f}}
 canvas#wheelCanvas{width:90%;max-width:400px;height:auto;margin:10px auto;display:block}
 button{margin:10px;padding:12px 30px;font-size:1.1rem;border:none;border-radius:50px;cursor:pointer;transition:.3s}
 #spinButton{background:#ff0;color:#4b0082}
@@ -16,15 +19,17 @@ button{margin:10px;padding:12px 30px;font-size:1.1rem;border:none;border-radius:
 @keyframes winnerBounce{0%{transform:translate(-50%,-50%) scale(0);}50%{transform:translate(-50%,-50%) scale(1.2);}70%{transform:translate(-50%,-50%) scale(0.95);}100%{transform:translate(-50%,-50%) scale(1);}}
 #winnerButton{margin-top:15px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;transition:.3s}
 #winnerButton:hover{transform:scale(1.08)}
-#logoTop{width:300px;margin:10px auto;display:block}
-#finalImage{width:180px;margin:10px auto;display:block}
-#legal{font-size:0.9rem;margin:5px 0;color:#fff}
-#rights{font-size:0.9rem;margin-bottom:15px;color:#fff}
+#logoTop{width:320px;margin:10px auto;display:block}
+#finalImage{width:180px;margin:5px auto;display:block}
+#legal{font-size:0.9rem;margin:2px 0;color:#fff}
+#rights{font-size:0.9rem;margin-bottom:5px;color:#fff}
 canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
 </style>
 </head>
 <body>
 <img id="logoTop" src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY">
+<div id="subtitle">¡Animate a girar, es tu momento de brillar!</div>
+
 <canvas id="wheelCanvas" width="400" height="400"></canvas>
 <button id="spinButton">GIRAR</button>
 
