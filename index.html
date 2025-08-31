@@ -8,22 +8,23 @@
 body{margin:0;font-family:Arial Black,sans-serif;text-align:center;color:#fff;background:linear-gradient(135deg,#4b0082,#ff00ff,#00ff00,#ff9900);background-size:400% 400%;animation:gradientBG 15s ease infinite}
 @keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 h1{font-size:2rem;margin:10px 0}
-canvas#wheelCanvas{width:90%;max-width:400px;height:auto;margin:20px auto;display:block}
+canvas#wheelCanvas{width:90%;max-width:400px;height:auto;margin:10px auto;display:block}
 button{margin:10px;padding:12px 30px;font-size:1.1rem;border:none;border-radius:50px;cursor:pointer;transition:.3s}
 #spinButton{background:#ff0;color:#4b0082}
-#winnerPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.9);padding:30px 40px;border-radius:15px;color:#fff;font-size:1.5rem;font-weight:bold;text-align:center;z-index:1000;text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f;transition:transform 0.5s cubic-bezier(0.68,-0.55,0.27,1.55)}
+#winnerPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.9);padding:20px 25px;border-radius:15px;color:#fff;font-size:1.4rem;font-weight:bold;text-align:center;z-index:1000;text-shadow:0 0 5px #fff,0 0 10px #ff0,0 0 15px #f0f;transition:transform 0.5s cubic-bezier(0.68,-0.55,0.27,1.55)}
 #winnerPopup.show{transform:translate(-50%,-50%) scale(1);animation:winnerBounce 0.8s ease forwards}
 @keyframes winnerBounce{0%{transform:translate(-50%,-50%) scale(0);}50%{transform:translate(-50%,-50%) scale(1.2);}70%{transform:translate(-50%,-50%) scale(0.95);}100%{transform:translate(-50%,-50%) scale(1);}}
 #winnerButton{margin-top:15px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;transition:.3s}
 #winnerButton:hover{transform:scale(1.08)}
-#finalImage{width:200px;margin:20px auto;display:block}
+#logoTop{width:300px;margin:10px auto;display:block}
+#finalImage{width:180px;margin:10px auto;display:block}
 #legal{font-size:0.9rem;margin:5px 0;color:#fff}
-#rights{font-size:0.9rem;margin-bottom:30px;color:#fff}
+#rights{font-size:0.9rem;margin-bottom:15px;color:#fff}
+canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
 </style>
 </head>
 <body>
-<h1>Rueda de la Fortuna</h1>
-<img src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY" style="width:200px;margin:10px auto;display:block">
+<img id="logoTop" src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY">
 <canvas id="wheelCanvas" width="400" height="400"></canvas>
 <button id="spinButton">GIRAR</button>
 
@@ -31,18 +32,16 @@ button{margin:10px;padding:12px 30px;font-size:1.1rem;border:none;border-radius:
 <div id="legal">+18 | Juego Responsable | Apuesta con moderación</div>
 <div id="rights">Todos los derechos reservados FORTUNA PLAY™</div>
 
-<canvas id="confetti"></canvas>
 <div id="winnerPopup">
+  <canvas id="confetti"></canvas>
   <div id="winnerMessage"></div>
   <button id="winnerButton">Solicitar premio</button>
 </div>
 
 <script>
-// Premios y cajeros
 const prizes=["300 fichas (con carga mínima)","500 fichas (con carga mínima)","100 fichas (sin carga)","15% extra en primera carga","25% extra en segunda carga","30% extra en tercera carga","200 fichas (con carga mínima)"];
 const cashiers=[{nombre:'Martin',num:'5491132525913'},{nombre:'Lucas',num:'5491171334027'},{nombre:'Cami',num:'5491156349123'},{nombre:'Octavio',num:'5491173566830'},{nombre:'Joaki',num:'5491123365501'},{nombre:'Facu',num:'5491125127839'},{nombre:'Ale',num:'5492615027973'}];
 
-// Rueda
 const canvas=document.getElementById('wheelCanvas'),ctx=canvas.getContext('2d'),wheelRadius=canvas.width/2;
 let angle=0;
 function drawWheel(){
@@ -58,17 +57,18 @@ function drawWheel(){
 }
 drawWheel();
 
-// Confetti
-const confCanvas=document.getElementById('confetti'),confCtx=confCanvas.getContext('2d');confCanvas.width=window.innerWidth;confCanvas.height=window.innerHeight;let confettiParticles=[];
-function launchConfetti(){for(let i=0;i<150;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti()}
-function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
-window.addEventListener('resize',()=>{confCanvas.width=window.innerWidth;confCanvas.height=window.innerHeight});
-
-// Giro
 const spinBtn=document.getElementById('spinButton');
 const popup=document.getElementById('winnerPopup');
 const winnerMsg=document.getElementById('winnerMessage');
 const winnerBtn=document.getElementById('winnerButton');
+const confCanvas=document.getElementById('confetti'),confCtx=confCanvas.getContext('2d');confCanvas.width=popup.offsetWidth;confCanvas.height=popup.offsetHeight;let confettiParticles=[];
+
+function launchConfetti(){
+  confettiParticles=[];
+  for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}
+  animateConfetti();
+}
+function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
 spinBtn.addEventListener('click',()=>{
   spinBtn.style.display='none';
@@ -83,10 +83,10 @@ spinBtn.addEventListener('click',()=>{
     winnerBtn.onclick=()=>{
       const nowDate=new Date().toLocaleString();
       window.open(`https://wa.me/${assignedCashier.num}?text=${encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}.`)}`,'_blank');
-      launchConfetti();
       popup.classList.remove('show');
     }
-    popup.classList.add('show');launchConfetti();
+    confCanvas.width=popup.offsetWidth; confCanvas.height=popup.offsetHeight;
+    launchConfetti(); popup.classList.add('show');
   }
   requestAnimationFrame(animate);
 });
