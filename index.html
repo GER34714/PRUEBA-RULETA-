@@ -1,113 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rueda de la Fortuna</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: url('https://iili.io/KFrecG4.md.jpg') no-repeat center center fixed;
-      background-size: cover;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      color: #fff;
-    }
-    header {
-      margin-top: 20px;
-    }
-    header img {
-      max-width: 150px;
-      height: auto;
-      margin-bottom: 10px;
-    }
-    h1 {
-      color: #FFD700; /* Amarillo dorado */
-      font-size: 2rem;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 5px #000;
-    }
-    #rueda {
-      width: 300px;
-      height: 300px;
-      margin: 0 auto;
-      border-radius: 50%;
-      border: 8px solid #FFD700;
-    }
-    #flecha {
-      width: 0; height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-top: 30px solid red;
-      margin: 10px auto;
-    }
-    #girarBtn {
-      margin: 20px auto;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 10px;
-      background: #FFD700;
-      color: #000;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 0 10px #000;
-    }
-    #girarBtn:disabled {
-      background: #999;
-      cursor: not-allowed;
-    }
-    #popupPremio {
-      display: none;
-      background: rgba(0,0,0,0.9);
-      padding: 20px;
-      border-radius: 15px;
-      margin: 20px auto;
-      width: 80%;
-      max-width: 400px;
-    }
-    #contadorRueda {
-      margin: 30px auto;
-      font-size: 1rem;
-      color: #FFD700;
-      text-shadow: 1px 1px 3px #000;
-    }
-    canvas#confetti {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORTUNA PLAY™ - Rueda de la Fortuna</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial Black', sans-serif;
+    background: linear-gradient(135deg, #4b0082, #ff00ff, #00ff00);
+    color: #fff;
+    text-align: center;
+    overflow-x: hidden;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-top: 20px;
+    animation: neon 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes neon {
+    from { text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff, 0 0 20px #ff00ff; }
+    to { text-shadow: 0 0 10px #fff, 0 0 20px #4b0082, 0 0 30px #00ff00; }
+  }
+  .logo {
+    width: 200px;
+    margin: 20px auto;
+    transition: 0.3s;
+  }
+  .logo:hover {
+    filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 30px #ff0);
+    transform: scale(1.05);
+  }
+  #wheel {
+    width: 400px;
+    height: 400px;
+    margin: 20px auto;
+    border-radius: 50%;
+    border: 10px solid #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 30px #ff0;
+  }
+  #spinButton {
+    margin-top: 20px;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    background: #ff0;
+    color: #4b0082;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  #spinButton:hover {
+    background: #fff;
+    color: #ff00ff;
+    transform: scale(1.1);
+  }
+  #whatsappButton {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: none;
+    transition: 0.3s;
+  }
+  #whatsappButton:hover {
+    transform: scale(1.1);
+  }
+  #finalLogo {
+    width: 180px;
+    margin: 20px auto;
+    transition: 0.3s;
+  }
+  #finalLogo:hover {
+    filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 30px #ff0);
+    transform: scale(1.05);
+  }
+  #legal {
+    margin: 10px;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  canvas {
+    position: absolute;
+    top:0;
+    left:0;
+    pointer-events: none;
+  }
+</style>
 </head>
 <body>
 
-<header>
-  <img src="https://iili.io/KK0Gdb4.md.webp" alt="Logo Lucas Lucky™">
-  <h1>🎡 RUEDA DE LA FORTUNA 🎲</h1>
-</header>
+<img src="https://iili.io/KK0Gdb4.md.webp" class="logo" alt="Logo FORTUNA PLAY">
 
-<div id="flecha"></div>
-<canvas id="rueda"></canvas>
-<br>
-<button id="girarBtn">🎰 Girar</button>
+<h1>🎡 RUEDA DE LA FORTUNA by FORTUNA PLAY™ 🎡</h1>
 
-<div id="popupPremio">
-  <h2 id="premioGanado"></h2>
-  <p><strong>Fecha y hora:</strong> <span id="fechaHora"></span></p>
-  <button id="reclamarBtn">📲 Reclamar premio</button>
-  <button id="usuarioBtn" style="display:none;">🆕 Quiero un usuario</button>
-</div>
+<div id="wheel"></div>
+<button id="spinButton">GIRAR</button>
+<button id="whatsappButton">Quiero mi usuario</button>
 
-<p id="contadorRueda"></p>
+<img src="https://iili.io/KK0OCrl.md.png" id="finalLogo" alt="Logo Final">
+<div id="legal">+18 | Juego Responsable</div>
+
 <canvas id="confetti"></canvas>
 
 <script>
-/* 🎡 Script de la Rueda de la Fortuna 🎡 */
-
-// Premios
-const premios = [
+const prizes = [
   "300 fichas (con carga mínima)",
   "500 fichas (con carga mínima)",
   "100 fichas (sin carga)",
@@ -115,131 +118,115 @@ const premios = [
   "25% extra en segunda carga",
   "30% extra en tercera carga",
   "200 fichas (con carga mínima)",
-  "🎯 Seguí participando"
+  "¡Sigue participando!"
 ];
 
-// Cajeros rotadores
-const cajeros = [
-  {num:"541135555111",nombre:"Cajero 1"},
-  {num:"541135555222",nombre:"Cajero 2"},
-  {num:"541135555333",nombre:"Cajero 3"},
-  {num:"541135555444",nombre:"Cajero 4"},
-  {num:"541135555555",nombre:"Cajero 5"},
-  {num:"541135555666",nombre:"Cajero 6"},
-  {num:"541135555777",nombre:"Cajero 7"},
+const cashiers = [
+  {nombre:'Martin',num:'5491132525913'},
+  {nombre:'Lucas',num:'5491171334027'},
+  {nombre:'Cami',num:'5491156349123'},
+  {nombre:'Octavio',num:'5491173566830'},
+  {nombre:'Joaki',num:'5491123365501'},
+  {nombre:'Facu',num:'5491125127839'},
+  {nombre:'Ale',num:'5492615027973'}
 ];
 
-// Elementos
-const rueda = document.getElementById("rueda");
-const ctx = rueda.getContext("2d");
-const girarBtn = document.getElementById("girarBtn");
-const popupPremio = document.getElementById("popupPremio");
-const premioGanado = document.getElementById("premioGanado");
-const fechaHora = document.getElementById("fechaHora");
-const reclamarBtn = document.getElementById("reclamarBtn");
-const usuarioBtn = document.getElementById("usuarioBtn");
-const confettiCanvas = document.getElementById("confetti");
-const confettiCtx = confettiCanvas.getContext("2d");
+let lastCashierIndex = parseInt(localStorage.getItem('lastCashierIndex')) || -1;
 
-// Ajuste tamaño confeti
-confettiCanvas.width = window.innerWidth;
-confettiCanvas.height = window.innerHeight;
-
-// Dibujar rueda
-function dibujarRueda(rotacion=0){
-  const numSeg = premios.length;
-  const ang = 2*Math.PI/numSeg;
-  ctx.clearRect(0,0,rueda.width,rueda.height);
-  for(let i=0;i<numSeg;i++){
-    ctx.beginPath();
-    ctx.moveTo(rueda.width/2,rueda.height/2);
-    ctx.arc(rueda.width/2,rueda.height/2,rueda.width/2,i*ang+rotacion,(i+1)*ang+rotacion);
-    ctx.fillStyle=i%2===0?"#FFD700":"#FF4500";
-    ctx.fill();
-    ctx.save();
-    ctx.translate(rueda.width/2,rueda.height/2);
-    ctx.rotate(i*ang+rotacion+ang/2);
-    ctx.textAlign="right";
-    ctx.fillStyle="#fff";
-    ctx.font="14px Arial";
-    ctx.fillText(premios[i],rueda.width/2-10,5);
-    ctx.restore();
-  }
+function getNextCashier() {
+  let nextIndex = (lastCashierIndex + 1) % cashiers.length;
+  lastCashierIndex = nextIndex;
+  localStorage.setItem('lastCashierIndex', lastCashierIndex);
+  return cashiers[nextIndex];
 }
-dibujarRueda();
 
-// Girar ruleta
-girarBtn.onclick = ()=> {
-  girarBtn.disabled = true;
-  const premioIndex = Math.floor(Math.random()*premios.length);
-  const numSeg = premios.length;
-  const ang = 2*Math.PI/numSeg;
-  const targetAngle = (numSeg - premioIndex)*ang - ang/2;
-  const rotFinal = 10*Math.PI + targetAngle;
-  let start;
-  function anim(t){
-    if(!start) start=t;
-    const progress=(t-start)/4000;
-    const ease=1-Math.pow(1-progress,3);
-    const currentRot=rotFinal*ease;
-    dibujarRueda(currentRot);
-    if(progress<1) requestAnimationFrame(anim);
-    else mostrarPremio(premios[premioIndex]);
+// Rueda simple simulada
+const wheelDiv = document.getElementById('wheel');
+wheelDiv.innerHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.2rem;">🎯</div>';
+
+const spinButton = document.getElementById('spinButton');
+const whatsappButton = document.getElementById('whatsappButton');
+
+spinButton.addEventListener('click', () => {
+  const lastSpin = localStorage.getItem('lastSpin');
+  const now = new Date().getTime();
+  if(lastSpin && now - lastSpin < 24*60*60*1000){
+    alert('Solo puedes girar una vez cada 24 horas!');
+    return;
   }
-  requestAnimationFrame(anim);
-};
-
-// Mostrar popup
-function mostrarPremio(premio){
-  const cajero=cajeros[Math.floor(Math.random()*cajeros.length)];
-  premioGanado.innerText=premio;
-  fechaHora.innerText=new Date().toLocaleString();
-  if(premio==="🎯 Seguí participando"){
-    usuarioBtn.style.display='inline-block';
-    reclamarBtn.style.display='none';
+  localStorage.setItem('lastSpin', now);
+  
+  // Elegir premio
+  const prize = prizes[Math.floor(Math.random()*prizes.length)];
+  alert(`¡Ganaste: ${prize}!`);
+  
+  // Asignar cajero si no tiene
+  let assignedCashier = JSON.parse(localStorage.getItem('assignedCashier'));
+  if(!assignedCashier){
+    assignedCashier = getNextCashier();
+    localStorage.setItem('assignedCashier', JSON.stringify(assignedCashier));
+  }
+  
+  if(prize === '¡Sigue participando!'){
+    whatsappButton.textContent = 'Quiero mi usuario';
+    whatsappButton.onclick = () => {
+      const msg = encodeURIComponent("Hola, quiero mi usuario.");
+      window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`, '_blank');
+    };
   } else {
-    usuarioBtn.style.display='none';
-    reclamarBtn.style.display='inline-block';
-    crearConfeti();
+    whatsappButton.textContent = 'Reclamar premio';
+    const nowDate = new Date().toLocaleString();
+    whatsappButton.onclick = () => {
+      const msg = encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir mi premio, lo gané el ${nowDate}, muchas gracias.`);
+      window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`, '_blank');
+    };
+    launchConfetti();
   }
-  popupPremio.style.display='block';
-  reclamarBtn.onclick=()=>window.open(`https://wa.me/${cajero.num}?text=${encodeURIComponent(`Hola ${cajero.nombre}, quiero reclamar mi premio de hoy "${premio}" (${new Date().toLocaleString()})`)}`,'_blank');
-  usuarioBtn.onclick=()=>window.open(`https://wa.me/${cajero.num}?text=${encodeURIComponent(`Hola ${cajero.nombre}, quiero crear mi usuario (${new Date().toLocaleString()})`)}`,'_blank');
+  whatsappButton.style.display = 'inline-block';
+});
+
+// Confetti
+const canvas = document.getElementById('confetti');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let confettiParticles = [];
+
+function launchConfetti(){
+  for(let i=0;i<100;i++){
+    confettiParticles.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height-50,
+      r: Math.random()*6+2,
+      dx: (Math.random()-0.5)*4,
+      dy: Math.random()*4+1,
+      color: `hsl(${Math.random()*360}, 100%, 50%)`
+    });
+  }
+  animateConfetti();
 }
 
-// 🎉 Confeti solo en premios reales
-let confettis=[];
-function crearConfeti(){
-  confettis=[];
-  for(let i=0;i<150;i++){
-    confettis.push({x:Math.random()*confettiCanvas.width,y:Math.random()*confettiCanvas.height, r:Math.random()*6+4, dx:Math.random()-0.5, dy:Math.random()*3+2,color:`hsl(${Math.random()*360},100%,50%)`});
-  }
-  requestAnimationFrame(animarConfeti);
-}
-function animarConfeti(){
-  confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-  confettis.forEach(c=>{
-    c.x+=c.dx; c.y+=c.dy;
-    if(c.y>confettiCanvas.height) c.y=0;
-    confettiCtx.beginPath();
-    confettiCtx.arc(c.x,c.y,c.r,0,2*Math.PI);
-    confettiCtx.fillStyle=c.color;
-    confettiCtx.fill();
+function animateConfetti(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  confettiParticles.forEach(p=>{
+    p.x += p.dx;
+    p.y += p.dy;
+    if(p.y>canvas.height) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
   });
-  if(confettis.length>0) requestAnimationFrame(animarConfeti);
+  if(confettiParticles.length>0){
+    requestAnimationFrame(animateConfetti);
+    confettiParticles = confettiParticles.filter(p=>p.y<canvas.height);
+  }
 }
 
-// Contador dinámico
-const contadorEl=document.getElementById('contadorRueda');
-function actualizarContadorRueda(){
-  const hoy=new Date().toISOString().slice(0,10);
-  let contadorData=JSON.parse(localStorage.getItem('contadorRueda'))||{};
-  if(contadorData.fecha!==hoy){ contadorData={fecha:hoy, cantidad:Math.floor(Math.random()*10)+50}; }
-  else{ contadorData.cantidad+=Math.floor(Math.random()*3); }
-  localStorage.setItem('contadorRueda',JSON.stringify(contadorData));
-  contadorEl.innerText=`${contadorData.cantidad} personas ya giraron la Rueda de la Fortuna hoy 🎡🎲`;
-}
-actualizarContadorRueda(); setInterval(actualizarContadorRueda,15000);
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
 </script>
 
 </body>
