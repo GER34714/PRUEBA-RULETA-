@@ -5,122 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FORTUNA PLAY™ - Rueda de la Fortuna</title>
 <style>
-  body {
-    margin: 0;
-    font-family: 'Arial Black', sans-serif;
-    color: #fff;
-    text-align: center;
-    background: linear-gradient(135deg, #4b0082, #ff00ff, #00ff00, #ff9900);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-  }
-  @keyframes gradientBG {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-  }
-  h1 {
-    font-size: 2.5rem;
-    margin-top: 20px;
-    animation: neon 1.5s ease-in-out infinite alternate;
-  }
-  @keyframes neon {
-    from { text-shadow: 0 0 5px #fff, 0 0 10px #ff00ff, 0 0 20px #ff00ff; }
-    to { text-shadow: 0 0 10px #fff, 0 0 20px #4b0082, 0 0 30px #00ff00; }
-  }
-  .logo {
-    width: 300px;
-    margin: 20px auto;
-    transition: 0.3s;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 30px #ff0);
-    transform: scale(1.1);
-  }
-  #wheelCanvas {
-    width: 90%;
-    max-width: 400px;
-    height: auto;
-    margin: 20px auto;
-    display: block;
-  }
-  #spinButton {
-    margin-top: 20px;
-    padding: 15px 40px;
-    font-size: 1.5rem;
-    background: #ff0;
-    color: #4b0082;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  #spinButton:hover {
-    background: #fff;
-    color: #ff00ff;
-    transform: scale(1.1);
-  }
-  #whatsappButton {
-    margin-top: 20px;
-    padding: 12px 30px;
-    font-size: 1.2rem;
-    background: #25D366;
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    display: none;
-    transition: 0.3s;
-  }
-  #whatsappButton:hover {
-    transform: scale(1.1);
-  }
-  #prizesHeader {
-    font-size: 1.5rem;
-    margin-top: 20px;
-  }
-  #prizesList {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  .prizeItem {
-    background: rgba(0,0,0,0.5);
-    margin: 5px;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-weight: bold;
-    min-width: 140px;
-  }
-  #finalLogo {
-    width: 150px;
-    margin: 30px auto 10px auto;
-    transition: 0.3s;
-  }
-  #finalLogo:hover {
-    filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 30px #ff0);
-    transform: scale(1.05);
-  }
-  #legal {
-    margin: 10px 0 30px 0;
-    font-size: 0.9rem;
-    color: #fff;
-  }
-  canvas#confetti {
-    position: fixed;
-    top:0;
-    left:0;
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
-  }
-  @media(max-width:600px){
-    h1 { font-size: 2rem; }
-    #spinButton { font-size: 1.2rem; padding: 12px 30px; }
-    #whatsappButton { font-size: 1rem; padding: 10px 25px; }
-    .logo { width: 220px; }
-  }
+body {
+  margin:0;
+  font-family:'Arial Black', sans-serif;
+  color:#fff;
+  text-align:center;
+  background: linear-gradient(135deg, #4b0082, #ff00ff, #00ff00, #ff9900);
+  background-size:400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+@keyframes gradientBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+h1 {
+  font-size:2.5rem;
+  margin-top:20px;
+  animation: neon 1.5s ease-in-out infinite alternate;
+}
+@keyframes neon {
+  from {text-shadow:0 0 5px #fff,0 0 10px #ff00ff,0 0 20px #ff00ff;}
+  to {text-shadow:0 0 10px #fff,0 0 20px #4b0082,0 0 30px #00ff00;}
+}
+.logo {
+  width:300px;
+  margin:20px auto;
+  transition:0.3s;
+}
+.logo:hover {
+  filter:drop-shadow(0 0 20px #fff) drop-shadow(0 0 30px #ff0);
+  transform:scale(1.1);
+}
+#wheelCanvas {
+  width:90%;
+  max-width:400px;
+  height:auto;
+  margin:20px auto;
+  display:block;
+}
+#spinButton {
+  margin-top:20px;
+  padding:15px 40px;
+  font-size:1.5rem;
+  background:#ff0;
+  color:#4b0082;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+#spinButton:hover {
+  background:#fff;
+  color:#ff00ff;
+  transform:scale(1.1);
+}
+#whatsappButton {
+  margin-top:20px;
+  padding:12px 30px;
+  font-size:1.2rem;
+  background:#25D366;
+  color:#fff;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  display:none;
+  transition:0.3s;
+}
+#whatsappButton:hover {transform:scale(1.1);}
+#prizesHeader {font-size:1.5rem;margin-top:20px;}
+#prizesList {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:10px;
+}
+.prizeItem {
+  background:rgba(0,0,0,0.5);
+  margin:5px;
+  padding:10px 15px;
+  border-radius:8px;
+  font-weight:bold;
+  min-width:140px;
+}
+#finalLogo {
+  width:150px;
+  margin:30px auto 10px auto;
+  transition:0.3s;
+}
+#finalLogo:hover {
+  filter:drop-shadow(0 0 20px #fff) drop-shadow(0 0 30px #ff0);
+  transform:scale(1.05);
+}
+#legal {
+  margin:10px 0 30px 0;
+  font-size:0.9rem;
+  color:#fff;
+}
+canvas#confetti {
+  position:fixed;
+  top:0; left:0;
+  pointer-events:none;
+  width:100%;
+  height:100%;
+}
+@media(max-width:600px){
+  h1{font-size:2rem;}
+  #spinButton{font-size:1.2rem;padding:12px 30px;}
+  #whatsappButton{font-size:1rem;padding:10px 25px;}
+  .logo{width:220px;}
+}
 </style>
 </head>
 <body>
@@ -131,7 +125,7 @@
 
 <canvas id="wheelCanvas" width="400" height="400"></canvas>
 <button id="spinButton">GIRAR</button>
-<button id="whatsappButton">Quiero mi usuario</button>
+<button id="whatsappButton"></button>
 
 <div id="prizesHeader">🎁 Posibles premios 🎁</div>
 <div id="prizesList"></div>
@@ -165,23 +159,38 @@ const cashiers = [
   {nombre:'Ale',num:'5492615027973'}
 ];
 
-let lastCashierIndex = 0;
-function getNextCashier() {
-  let nextIndex = (lastCashierIndex + 1) % cashiers.length;
-  lastCashierIndex = nextIndex;
-  return cashiers[nextIndex];
+// Asignación persistente de cajero por usuario
+let userCashier = JSON.parse(localStorage.getItem('userCashier')) || null;
+let usedCashiers = JSON.parse(localStorage.getItem('usedCashiers')) || [];
+
+function assignCashier(){
+  if(userCashier) return userCashier;
+  const available = cashiers.filter((_,i)=>!usedCashiers.includes(i));
+  let chosenIndex;
+  if(available.length === 0){
+    usedCashiers = [];
+    localStorage.setItem('usedCashiers', JSON.stringify(usedCashiers));
+    return assignCashier();
+  } else {
+    chosenIndex = cashiers.indexOf(available[Math.floor(Math.random()*available.length)]);
+  }
+  usedCashiers.push(chosenIndex);
+  localStorage.setItem('usedCashiers', JSON.stringify(usedCashiers));
+  userCashier = cashiers[chosenIndex];
+  localStorage.setItem('userCashier', JSON.stringify(userCashier));
+  return userCashier;
 }
 
-// Mostrar lista de premios
+// Mostrar premios numerados
 const prizesListDiv = document.getElementById('prizesList');
-prizes.forEach(p=>{
+prizes.forEach((p,i)=>{
   const div = document.createElement('div');
-  div.className = 'prizeItem';
-  div.textContent = p;
+  div.className='prizeItem';
+  div.textContent=`${i+1}. ${p}`;
   prizesListDiv.appendChild(div);
 });
 
-// Rueda canvas
+// Rueda con números grandes
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
 const wheelRadius = canvas.width/2;
@@ -189,25 +198,27 @@ let angle = 0;
 
 function drawWheel(){
   const num = prizes.length;
-  const arc = 2*Math.PI / num;
+  const arc = 2*Math.PI/num;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<num;i++){
     const start = i*arc;
     const end = start + arc;
     ctx.beginPath();
-    ctx.moveTo(wheelRadius, wheelRadius);
-    ctx.arc(wheelRadius, wheelRadius, wheelRadius, start+angle, end+angle);
-    ctx.fillStyle = i%2===0 ? '#ffcc00' : '#ff66cc';
+    ctx.moveTo(wheelRadius,wheelRadius);
+    ctx.arc(wheelRadius,wheelRadius,wheelRadius,start+angle,end+angle);
+    ctx.fillStyle=i%2===0?'#ffcc00':'#ff66cc';
     ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle='#fff';
+    ctx.lineWidth=2;
     ctx.stroke();
+    // Números grandes
     ctx.save();
-    ctx.translate(wheelRadius, wheelRadius);
-    ctx.rotate(start + arc/2 + angle);
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 14px Arial';
-    ctx.fillText(prizes[i], wheelRadius - 10, 5);
+    ctx.translate(wheelRadius,wheelRadius);
+    ctx.rotate(start+arc/2+angle);
+    ctx.fillStyle='#000';
+    ctx.font='bold 30px Arial';
+    ctx.textAlign='center';
+    ctx.fillText(`${i+1}`, wheelRadius/2,10);
     ctx.restore();
   }
 }
@@ -216,9 +227,8 @@ drawWheel();
 const spinButton = document.getElementById('spinButton');
 const whatsappButton = document.getElementById('whatsappButton');
 
-spinButton.addEventListener('click', () => {
-  let assignedCashier = getNextCashier();
-
+spinButton.addEventListener('click', ()=>{
+  const assignedCashier = assignCashier();
   const spinAngle = Math.random()*Math.PI*4 + Math.PI*4;
   const duration = 3000;
   const start = performance.now();
@@ -229,7 +239,6 @@ spinButton.addEventListener('click', () => {
     if(elapsed>duration) elapsed=duration;
     const progress = elapsed/duration;
     angle = startAngle + spinAngle*easeOutCubic(progress);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
     drawWheel();
     if(elapsed<duration) requestAnimationFrame(animate);
     else finishSpin();
@@ -238,47 +247,49 @@ spinButton.addEventListener('click', () => {
 
   function finishSpin(){
     const num = prizes.length;
-    const sector = Math.floor((angle % (2*Math.PI)) / (2*Math.PI/num));
-    const prize = prizes[(num - sector)%num];
+    const sector = Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
+    const prize = prizes[(num-sector+num)%num];
+
     alert(`¡Ganaste: ${prize}!`);
 
-    if(prize === '¡Sigue participando!'){
-      whatsappButton.textContent = 'Quiero mi usuario';
-      whatsappButton.onclick = () => {
-        const msg = encodeURIComponent("Hola, quiero mi usuario.");
-        window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`, '_blank');
+    whatsappButton.style.display='inline-block';
+    const nowDate = new Date().toLocaleString();
+
+    if(prize==='¡Sigue participando!'){
+      whatsappButton.textContent='Quiero mi usuario';
+      whatsappButton.onclick=()=>{
+        const msg=encodeURIComponent("Hola, quiero mi usuario.");
+        window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');
       };
     } else {
-      whatsappButton.textContent = 'Reclamar premio';
-      const nowDate = new Date().toLocaleString();
-      whatsappButton.onclick = () => {
-        const msg = encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir mi premio, lo gané el ${nowDate}, muchas gracias.`);
-        window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`, '_blank');
+      whatsappButton.textContent='Solicitar mi premio';
+      whatsappButton.onclick=()=>{
+        const msg=encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}, muchas gracias.`);
+        window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');
       };
       launchConfetti();
     }
-    whatsappButton.style.display = 'inline-block';
   }
 });
 
-function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
 
 // Confetti
 const confCanvas = document.getElementById('confetti');
 const confCtx = confCanvas.getContext('2d');
-confCanvas.width = window.innerWidth;
-confCanvas.height = window.innerHeight;
-let confettiParticles = [];
+confCanvas.width=window.innerWidth;
+confCanvas.height=window.innerHeight;
+let confettiParticles=[];
 
 function launchConfetti(){
-  for(let i = 0; i < 100; i++){
+  for(let i=0;i<100;i++){
     confettiParticles.push({
-      x: Math.random() * confCanvas.width,
-      y: Math.random() * confCanvas.height - 50,
-      r: Math.random() * 6 + 2,
-      dx: (Math.random() - 0.5) * 4,
-      dy: Math.random() * 4 + 1,
-      color: `hsl(${Math.random() * 360}, 100%, 50%)`
+      x:Math.random()*confCanvas.width,
+      y:Math.random()*confCanvas.height-50,
+      r:Math.random()*6+2,
+      dx:(Math.random()-0.5)*4,
+      dy:Math.random()*4+1,
+      color:`hsl(${Math.random()*360},100%,50%)`
     });
   }
   animateConfetti();
@@ -287,23 +298,23 @@ function launchConfetti(){
 function animateConfetti(){
   confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);
   confettiParticles.forEach(p=>{
-    p.x += p.dx;
-    p.y += p.dy;
-    if(p.y > confCanvas.height) p.y = 0;
+    p.x+=p.dx;
+    p.y+=p.dy;
+    if(p.y>confCanvas.height) p.y=0;
     confCtx.beginPath();
     confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    confCtx.fillStyle = p.color;
+    confCtx.fillStyle=p.color;
     confCtx.fill();
   });
-  if(confettiParticles.length > 0){
+  if(confettiParticles.length>0){
     requestAnimationFrame(animateConfetti);
-    confettiParticles = confettiParticles.filter(p=>p.y < confCanvas.height);
+    confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height);
   }
 }
 
-window.addEventListener('resize', () => {
-  confCanvas.width = window.innerWidth;
-  confCanvas.height = window.innerHeight;
+window.addEventListener('resize', ()=>{
+  confCanvas.width=window.innerWidth;
+  confCanvas.height=window.innerHeight;
 });
 </script>
 </body>
