@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FORTUNA PLAY™</title>
 <style>
-body{margin:0;font-family:Arial Black,sans-serif;text-align:center;color:#fff;background:#000;}
+body{
+  margin:0;
+  font-family:Arial Black,sans-serif;
+  text-align:center;
+  color:#fff;
+  background:url('https://iili.io/KfreSig.md.webp') no-repeat center center fixed;
+  background-size:cover;
+}
 #logoTop{width:360px;margin:15px auto;display:block;}
 #subtitle{font-size:1.6rem;margin:5px 0;color:#ff0;font-weight:bold;text-shadow:0 0 5px #fff,0 0 10px #ff0;animation:neonSubtitle 1.5s infinite alternate;}
 @keyframes neonSubtitle{0%{text-shadow:0 0 5px #fff,0 0 10px #ff0}50%{text-shadow:0 0 10px #fff,0 0 20px #ff0}100%{text-shadow:0 0 5px #fff,0 0 10px #ff0}}
@@ -101,7 +108,8 @@ spinBtn.addEventListener('click',()=>{
     winnerMsg.textContent=`¡Ganaste: ${prize}!`;popup.classList.add('show');winnerBtn.style.display='inline-block';
     launchConfetti();
     const nowDate=new Date().toLocaleString();
-    winnerBtn.onclick=()=>{const msg=encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}, muchas gracias.`);window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');popup.classList.remove('show')}
+    winnerBtn.onclick=()=>{const msg=encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}, muchas gracias.`);window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');popup.classList
+.remove('show')}
   }
 });
 
