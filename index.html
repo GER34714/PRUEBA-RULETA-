@@ -233,6 +233,7 @@ function shuffle(array){
   }
 }
 
+// Datos del usuario
 let userData=JSON.parse(localStorage.getItem('userData')) || {lastSpin:0,assignedCashier:null};
 let dailyCount=Math.floor(Math.random()*500+100);
 
@@ -283,7 +284,7 @@ let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
-// Cajero fijo por cliente con rotación
+// Cajero fijo por cliente
 function getAssignedCashier() {
   let userData = JSON.parse(localStorage.getItem('userData')) || {};
   if(userData.assignedCashier) return userData.assignedCashier;
@@ -298,7 +299,7 @@ function getAssignedCashier() {
   return assigned;
 }
 
-// Función de giro
+// Giro de la ruleta
 spinBtn.addEventListener('click',()=>{
   spinBtn.disabled=true;
   const assignedCashier = getAssignedCashier();
@@ -333,7 +334,7 @@ spinBtn.addEventListener('click',()=>{
 
     // Mensaje fijo al cajero con premio y fecha
     winnerBtn.onclick=()=>{
-      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${nowStr} y quisiera reclamarlo. ¡Muchas gracias!`);
+      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${nowStr} y quisiera reclamarlo. Muchas gracias`);
       const url=`https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
       window.open(url,'_blank');
     }
