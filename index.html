@@ -298,6 +298,7 @@ function getAssignedCashier() {
   return assigned;
 }
 
+// Función de giro
 spinBtn.addEventListener('click',()=>{
   spinBtn.disabled=true;
   const assignedCashier = getAssignedCashier();
@@ -330,9 +331,9 @@ spinBtn.addEventListener('click',()=>{
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
-    // Mensaje fijo al cajero
+    // Mensaje fijo al cajero con premio y fecha
     winnerBtn.onclick=()=>{
-      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané un premio y quisiera reclamarlo! Muchas gracias`);
+      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${nowStr} y quisiera reclamarlo. ¡Muchas gracias!`);
       const url=`https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
       window.open(url,'_blank');
     }
