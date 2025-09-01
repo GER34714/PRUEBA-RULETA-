@@ -15,16 +15,17 @@ body{
 }
 .logo-container{
   display:flex;
-  justify-content:center; /* centra horizontalmente */
-  align-items:center;     /* centra verticalmente */
-  margin:15px auto;       /* espacio arriba y abajo, centrado horizontal */
-  width:100%;             /* ocupa todo el ancho disponible */
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  margin:15px 0;
+  width:100%;
 }
 #logoTop, #finalImage{
-  max-width:90%;          /* responsive */
+  max-width:90%;
   height:auto;
   display:block;
-  margin:0 auto;          /* centrado absoluto */
+  margin:0 auto;
   filter: drop-shadow(0 0 10px #ff0) drop-shadow(0 0 20px #ff0);
 }
 #subtitle{
@@ -44,12 +45,12 @@ body{
 #wheelCanvas{width:100%;height:auto;}
 #arrow{
   position:absolute;
-  top:-10px; /* justo sobre la rueda */
+  top:-10px;
   left:50%;
   transform:translateX(-50%);
-  width:4px;      /* ancho de la línea */
-  height:30px;    /* largo de la flecha */
-  background:#fff; /* color blanco */
+  width:4px;
+  height:30px;
+  background:#fff;
   border-radius:2px;
   z-index:10;
 }
@@ -124,7 +125,7 @@ function shuffle(array){
 }
 
 // Estado usuario con localStorage
-let userData=JSON.parse(localStorage.getItem('userData')) || {lastSpin:0,assignedCashier:null};
+let userData=JSON.parse(localStorage.getItem('userData')) || {assignedCashier:null, lastPrize:null};
 let usedCashiers=JSON.parse(localStorage.getItem('usedCashiers')) || [];
 
 // Contador diario simulado
@@ -179,8 +180,12 @@ function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.hei
 function getAvailableCashier(){
   const remaining=cashiers.filter(c=>!usedCashiers.includes(c.nombre));
   if(remaining.length===0){
+    const last=usedCashiers[usedCashiers.length-1];
     usedCashiers=[];
     shuffle(cashiers);
+    if(cashiers[0].nombre===last){
+      [cashiers[0],cashiers[cashiers.length-1]]=[cashiers[cashiers.length-1],cashiers[0]];
+    }
     return getAvailableCashier();
   }
   const chosen=remaining[Math.floor(Math.random()*remaining.length)];
@@ -189,16 +194,9 @@ function getAvailableCashier(){
   return chosen;
 }
 
-// Giro
+// Giro con premio no repetido para la misma persona
 spinBtn.addEventListener('click',()=>{
-  const now=Date.now();
-  if(now - userData.lastSpin<24*60*60*1000){
-    alert("Ya giraste hoy, vuelve mañana.");
-    return;
-  }
-
   spinBtn.disabled=true;
-  userData.lastSpin=now;
 
   const assignedCashier=userData.assignedCashier || getAvailableCashier();
 
@@ -216,8 +214,14 @@ spinBtn.addEventListener('click',()=>{
 
   function finishSpin(){
     const num=prizes.length;
-    const sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
-    const prize=prizes[(num-sector+num)%num];
+    let sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
+    let prize=prizes[(num-sector+num)%num];
+
+    // Evitar premio repetido para el mismo usuario
+    while(userData.lastPrize === prize){
+      sector = Math.floor(Math.random() * num);
+      prize = prizes[sector];
+    }
 
     winnerMsg.textContent=`¡Ganaste: ${prize}!`;
     popup.classList.add('show');
@@ -228,6 +232,7 @@ spinBtn.addEventListener('click',()=>{
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
     if(!userData.assignedCashier) userData.assignedCashier=assignedCashier;
+    userData.lastPrize = prize;
     localStorage.setItem('userData',JSON.stringify(userData));
 
     const nowDate=new Date().toLocaleString();
