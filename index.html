@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FORTUNA PLAY™</title>
+
+<!-- Open Graph meta tags para vista previa -->
+<meta property="og:title" content="FORTUNA PLAY™ - Gira la ruleta y gana premios">
+<meta property="og:description" content="Participa en la ruleta de FORTUNA PLAY™ y gana premios increíbles con nuestros cajeros asignados. ¡Animate a girar!">
+<meta property="og:image" content="https://iili.io/KfQm7dF.md.jpg">
+<meta property="og:url" content="https://tudominio.com/ruleta.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FORTUNA PLAY™">
+
 <style>
 body{
   margin:0;
@@ -22,12 +31,19 @@ body{
   width:100%;
 }
 #logoTop{
-  max-width:50%; /* adaptable según pantalla */
+  max-width:50%;
   width:100%;
   height:auto;
   display:block;
   margin:0 auto;
-  filter: drop-shadow(0 0 10px #ff0) drop-shadow(0 0 20px #ff0);
+  /* luces de neón intermitentes */
+  filter: drop-shadow(0 0 10px #0ff) drop-shadow(0 0 20px #0ff);
+  animation:neonLogo 1.5s infinite alternate;
+}
+@keyframes neonLogo{
+  0%{filter: drop-shadow(0 0 5px #0ff) drop-shadow(0 0 10px #0ff);}
+  50%{filter: drop-shadow(0 0 15px #0ff) drop-shadow(0 0 30px #0ff);}
+  100%{filter: drop-shadow(0 0 5px #0ff) drop-shadow(0 0 10px #0ff);}
 }
 #finalImage{
   max-width:90%;
@@ -39,19 +55,19 @@ body{
 #subtitle{
   font-size:1.6rem;
   margin:5px 0;
-  color:#ff0;
+  color:#0ff; /* color neón cyan */
   font-weight:bold;
-  text-shadow:0 0 5px #fff,0 0 10px #ff0;
+  text-shadow:0 0 5px #fff,0 0 10px #0ff;
   animation:neonSubtitle 1.5s infinite alternate;
 }
 @keyframes neonSubtitle{
-  0%{text-shadow:0 0 5px #fff,0 0 10px #ff0}
-  50%{text-shadow:0 0 10px #fff,0 0 20px #ff0}
-  100%{text-shadow:0 0 5px #fff,0 0 10px #ff0}
+  0%{text-shadow:0 0 5px #fff,0 0 10px #0ff;}
+  50%{text-shadow:0 0 10px #fff,0 0 20px #0ff;}
+  100%{text-shadow:0 0 5px #fff,0 0 10px #0ff;}
 }
 #wheelContainer{
   position:relative;
-  width:80vw;  /* ancho relativo a la pantalla */
+  width:80vw;  
   max-width:350px;
   margin:10px auto;
 }
@@ -129,7 +145,6 @@ let cashiers=[
   {nombre:'Ale',num:'5492615027973'}
 ];
 
-// Shuffle function
 function shuffle(array){
   for(let i=array.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
@@ -137,11 +152,8 @@ function shuffle(array){
   }
 }
 
-// Estado usuario con localStorage
 let userData=JSON.parse(localStorage.getItem('userData')) || {assignedCashier:null, lastPrize:null};
 let usedCashiers=JSON.parse(localStorage.getItem('usedCashiers')) || [];
-
-// Contador diario simulado
 let dailyCount=Math.floor(Math.random()*500+100); 
 
 const spinBtn=document.getElementById('spinButton');
@@ -180,7 +192,6 @@ function drawWheel(){
 }
 drawWheel();
 
-// Confetti
 const confCanvas=document.getElementById('confetti');
 const confCtx=confCanvas.getContext('2d');
 confCanvas.width=popup.offsetWidth;
@@ -189,16 +200,11 @@ let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
-// Obtener cajero disponible único
 function getAvailableCashier(){
   const remaining=cashiers.filter(c=>!usedCashiers.includes(c.nombre));
   if(remaining.length===0){
-    const last=usedCashiers[usedCashiers.length-1];
     usedCashiers=[];
     shuffle(cashiers);
-    if(cashiers[0].nombre===last){
-      [cashiers[0],cashiers[cashiers.length-1]]=[cashiers[cashiers.length-1],cashiers[0]];
-    }
     return getAvailableCashier();
   }
   const chosen=remaining[Math.floor(Math.random()*remaining.length)];
@@ -207,12 +213,9 @@ function getAvailableCashier(){
   return chosen;
 }
 
-// Giro con premio no repetido
 spinBtn.addEventListener('click',()=>{
   spinBtn.disabled=true;
-
   const assignedCashier=userData.assignedCashier || getAvailableCashier();
-
   const spinAngle=Math.random()*Math.PI*4+Math.PI*4,duration=3000,start=performance.now(),startAngle=angle;
   function animate(time){
     let elapsed=time-start;
@@ -228,12 +231,14 @@ spinBtn.addEventListener('click',()=>{
   function finishSpin(){
     const num=prizes.length;
     let sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
-    let prize=prizes[(num-sector+num)%num];
-
-    while(userData.lastPrize === prize){
-      sector = Math.floor(Math.random() * num);
-      prize = prizes[sector];
+    let prizeIndex=Math.floor(Math.random()*prizes.length);
+    if(userData.lastPrize!==null) {
+      while(prizeIndex===userData.lastPrize) prizeIndex=Math.floor(Math.random()*prizes.length);
     }
+    const prize=prizes[prizeIndex];
+    userData.assignedCashier=assignedCashier;
+    userData.lastPrize=prizeIndex;
+    localStorage.setItem('userData',JSON.stringify(userData));
 
     winnerMsg.textContent=`¡Ganaste: ${prize}!`;
     popup.classList.add('show');
@@ -242,10 +247,6 @@ spinBtn.addEventListener('click',()=>{
 
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
-
-    if(!userData.assignedCashier) userData.assignedCashier=assignedCashier;
-    userData.lastPrize = prize;
-    localStorage.setItem('userData',JSON.stringify(userData));
 
     const nowDate=new Date().toLocaleString();
     winnerBtn.onclick=()=>{
