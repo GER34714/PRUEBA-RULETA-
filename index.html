@@ -14,79 +14,153 @@
 <meta property="og:site_name" content="FORTUNA PLAY™">
 
 <style>
-body{
-  margin:0;
-  font-family:Arial Black,sans-serif;
-  text-align:center;
-  color:#fff;
-  background:url('https://iili.io/KfreSig.md.webp') no-repeat center center fixed;
-  background-size:cover;
+body {
+  margin: 0;
+  font-family: Arial Black, sans-serif;
+  text-align: center;
+  color: #0ff;
+  background: url('https://iili.io/KfreSig.md.webp') no-repeat center center fixed;
+  background-size: cover;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
 }
-.logo-container{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  margin:5px 0;
-  width:100%;
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 5px 0;
+  width: 100%;
 }
-#logoTop{
-  max-width:45%;
-  width:100%;
-  height:auto;
-  display:block;
-  margin:0 auto 5px auto; /* margen abajo reducido */
+
+#logoTop {
+  max-width: 45%;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 5px auto;
   filter: drop-shadow(0 0 10px #0ff);
-  animation:neonLogo 2s infinite alternate;
+  animation: neonLogo 2s infinite alternate;
 }
-@keyframes neonLogo{
-  0%{filter: drop-shadow(0 0 10px #0ff);}
-  25%{filter: drop-shadow(0 0 15px #f0f);}
-  50%{filter: drop-shadow(0 0 10px #ff0);}
-  75%{filter: drop-shadow(0 0 15px #0f0);}
-  100%{filter: drop-shadow(0 0 10px #0ff);}
+@keyframes neonLogo {
+  0% { filter: drop-shadow(0 0 10px #0ff); }
+  25% { filter: drop-shadow(0 0 15px #f0f); }
+  50% { filter: drop-shadow(0 0 10px #ff0); }
+  75% { filter: drop-shadow(0 0 15px #0f0); }
+  100% { filter: drop-shadow(0 0 10px #0ff); }
 }
-#finalImage{
-  max-width:90%;
-  height:auto;
-  display:block;
-  margin:0 auto;
+
+#finalImage {
+  max-width: 90%;
+  height: auto;
+  display: block;
+  margin: 5px auto 0 auto;
   filter: drop-shadow(0 0 10px #ff0) drop-shadow(0 0 20px #ff0);
 }
-#subtitle{
-  font-size:1.5rem;
-  margin:2px 0 5px 0;
-  color:#FFA500; /* naranja brillante para visibilidad */
-  font-weight:bold;
-  text-shadow:none;
+
+#subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  margin: 2px 0 5px 0;
+  color: #0ff;
+  font-weight: bold;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
 }
-#wheelContainer{
-  position:relative;
-  width:60vw;
-  max-width:250px;
-  margin:0 auto 5px auto; /* margen inferior reducido */
+
+#wheelContainer {
+  position: relative;
+  width: 70vw;
+  max-width: 250px;
+  margin: 0 auto 5px auto;
 }
-#wheelCanvas{width:100%;height:auto;}
-#arrow{
-  position:absolute;
-  top:-10px;
-  left:50%;
-  transform:translateX(-50%);
-  width:4px;
-  height:30px;
-  background:#fff;
-  border-radius:2px;
-  z-index:10;
+#wheelCanvas { width: 100%; height: auto; }
+
+#arrow {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 30px;
+  background: #fff;
+  border-radius: 2px;
+  z-index: 10;
 }
-button{margin:5px 0;padding:12px 30px;font-size:1.2rem;border:none;border-radius:50px;cursor:pointer;transition:.3s}
-#spinButton{background:#ff0;color:#4b0082;}
-#winnerPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.95);padding:20px 25px;border-radius:15px;color:#fff;font-size:1.4rem;text-align:center;z-index:1000;transition:transform .5s;}
-#winnerPopup.show{transform:translate(-50%,-50%) scale(1);}
-#winnerButton{margin-top:10px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;}
-#winnerButton:hover{transform:scale(1.08);}
-#legal,#rights{font-size:0.9rem;margin:2px 0;color:#fff}
-#dailyCounter{margin-top:3px;font-size:0.95rem;color:#0f0;}
-canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
+
+button {
+  margin: 5px 0;
+  padding: 12px 30px;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: .3s;
+}
+#spinButton {
+  background: #ff0;
+  color: #4b0082;
+  font-weight: bold;
+  box-shadow: 0 0 10px #000;
+}
+#winnerButton {
+  margin-top: 10px;
+  padding: 12px 25px;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  border-radius: 50px;
+  background: #25D366;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+#winnerButton:hover { transform: scale(1.08); }
+
+#winnerPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(0, 0, 0, 0.95);
+  padding: clamp(15px, 4vw, 25px);
+  border-radius: 15px;
+  color: #0ff;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  text-align: center;
+  z-index: 1000;
+  transition: transform .5s;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+#winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
+
+#legal, #rights {
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
+  margin: 2px 0;
+  color: #0ff;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
+}
+#dailyCounter {
+  margin-top: 3px;
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  color: #0ff;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
+}
+
+canvas#confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 600px) {
+  #logoTop { max-width: 60%; }
+  #wheelContainer { width: 80vw; }
+  button { padding: 10px 20px; }
+}
 </style>
 </head>
 <body>
@@ -131,13 +205,13 @@ const prizes=[
 ];
 
 let cashiers=[
-  {nombre:'Martin',num:'5491132525913'},
-  {nombre:'Lucas',num:'5491171334027'},
-  {nombre:'Cami',num:'5491156349123'},
-  {nombre:'Octavio',num:'5491173566830'},
-  {nombre:'Joaki',num:'5491123365501'},
-  {nombre:'Facu',num:'5491125127839'},
-  {nombre:'Ale',num:'5492615027973'}
+  {nombre:'Martin',telefono:'5491132525913'},
+  {nombre:'Lucas',telefono:'5491171334027'},
+  {nombre:'Cami',telefono:'5491156349123'},
+  {nombre:'Octavio',telefono:'5491173566830'},
+  {nombre:'Joaki',telefono:'5491123365501'},
+  {nombre:'Facu',telefono:'5491125127839'},
+  {nombre:'Ale',telefono:'5492615027973'}
 ];
 
 function shuffle(array){
@@ -149,7 +223,6 @@ function shuffle(array){
 
 let userData=JSON.parse(localStorage.getItem('userData')) || {lastSpin:0,assignedCashier:null};
 let usedCashiers=JSON.parse(localStorage.getItem('usedCashiers')) || [];
-
 let dailyCount=Math.floor(Math.random()*500+100);  
 
 const spinBtn=document.getElementById('spinButton');
@@ -163,6 +236,7 @@ const wheelRadius=canvas.width/2;
 let angle=0;
 const colors=["#ff0000","#ff9900","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff"];
 
+// Dibujar ruleta
 function drawWheel(){
   const num=prizes.length,arc=2*Math.PI/num;
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -197,23 +271,43 @@ let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
-function getAvailableCashier(){
-  const remaining=cashiers.filter(c=>!usedCashiers.includes(c.nombre));
-  if(remaining.length===0){
-    usedCashiers=[];
+// Asignación de cajero fijo por cliente con rotación para nuevos
+function getAssignedCashier() {
+  let userData = JSON.parse(localStorage.getItem('userData')) || {};
+
+  // Si el usuario ya tiene cajero asignado, lo devolvemos
+  if(userData.assignedCashier) return userData.assignedCashier;
+
+  // Array de cajeros disponibles según la rotación actual
+  let usedCashiers = JSON.parse(localStorage.getItem('usedCashiers')) || [];
+  let remaining = cashiers.filter(c => !usedCashiers.includes(c.nombre));
+
+  // Si se terminaron los 7 cajeros, reiniciamos la lista y mezclamos
+  if(remaining.length === 0) {
+    usedCashiers = [];
     shuffle(cashiers);
-    return getAvailableCashier();
+    remaining = [...cashiers];
   }
-  const chosen=remaining[Math.floor(Math.random()*remaining.length)];
-  usedCashiers.push(chosen.nombre);
-  localStorage.setItem('usedCashiers',JSON.stringify(usedCashiers));
-  return chosen;
+
+  // Elegimos un cajero aleatorio de los restantes
+  const assigned = remaining[Math.floor(Math.random() * remaining.length)];
+
+  // Guardamos este cajero en la lista de usados
+  usedCashiers.push(assigned.nombre);
+  localStorage.setItem('usedCashiers', JSON.stringify(usedCashiers));
+
+  // Guardamos el cajero asignado para este usuario
+  userData.assignedCashier = assigned;
+  localStorage.setItem('userData', JSON.stringify(userData));
+
+  return assigned;
 }
 
 spinBtn.addEventListener('click',()=>{
   spinBtn.disabled=true;
-  const assignedCashier=userData.assignedCashier || getAvailableCashier();
+  const assignedCashier = getAssignedCashier();
   const spinAngle=Math.random()*Math.PI*4+Math.PI*4,duration=3000,start=performance.now(),startAngle=angle;
+
   function animate(time){
     let elapsed=time-start;
     if(elapsed>duration)elapsed=duration;
@@ -238,13 +332,10 @@ spinBtn.addEventListener('click',()=>{
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
-    if(!userData.assignedCashier) userData.assignedCashier=assignedCashier;
-    localStorage.setItem('userData',JSON.stringify(userData));
-
-    const nowDate=new Date().toLocaleString();
     winnerBtn.onclick=()=>{
-      const msg=encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}, muchas gracias.`);
-      window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');
+      const nowDate=new Date().toLocaleString();
+      const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}, gané ${prize} y quisiera reclamarlo, gracias`);
+      window.open(`https://wa.me/${assignedCashier.telefono}?text=${mensaje}`,'_blank');
       popup.classList.remove('show');
       spinBtn.disabled=false;
     }
