@@ -13,9 +13,35 @@ body{
   background:url('https://iili.io/KfreSig.md.webp') no-repeat center center fixed;
   background-size:cover;
 }
-#logoTop{width:360px;margin:15px auto;display:block;}
-#subtitle{font-size:1.6rem;margin:5px 0;color:#ff0;font-weight:bold;text-shadow:0 0 5px #fff,0 0 10px #ff0;animation:neonSubtitle 1.5s infinite alternate;}
-@keyframes neonSubtitle{0%{text-shadow:0 0 5px #fff,0 0 10px #ff0}50%{text-shadow:0 0 10px #fff,0 0 20px #ff0}100%{text-shadow:0 0 5px #fff,0 0 10px #ff0}}
+.logo-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:15px 0;
+}
+#logoTop{
+  width:360px;
+  max-width:90%;
+  filter: drop-shadow(0 0 10px #ff0) drop-shadow(0 0 20px #ff0);
+}
+#finalImage{
+  width:180px;
+  max-width:60%;
+  filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 15px #ff0);
+}
+#subtitle{
+  font-size:1.6rem;
+  margin:5px 0;
+  color:#ff0;
+  font-weight:bold;
+  text-shadow:0 0 5px #fff,0 0 10px #ff0;
+  animation:neonSubtitle 1.5s infinite alternate;
+}
+@keyframes neonSubtitle{
+  0%{text-shadow:0 0 5px #fff,0 0 10px #ff0}
+  50%{text-shadow:0 0 10px #fff,0 0 20px #ff0}
+  100%{text-shadow:0 0 5px #fff,0 0 10px #ff0}
+}
 #wheelContainer{position:relative;width:400px;margin:10px auto;}
 #wheelCanvas{width:100%;height:auto;}
 #arrow{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid #fff;}
@@ -25,14 +51,18 @@ button{margin:10px;padding:12px 30px;font-size:1.2rem;border:none;border-radius:
 #winnerPopup.show{transform:translate(-50%,-50%) scale(1);}
 #winnerButton{margin-top:15px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;}
 #winnerButton:hover{transform:scale(1.08);}
-#finalImage{width:180px;margin:15px auto;display:block;}
 #legal,#rights{font-size:0.9rem;margin:2px 0;color:#fff}
+#spinInfo{margin-top:5px;font-size:0.95rem;color:#ff0;}
+#dailyCounter{margin-top:5px;font-size:0.95rem;color:#0f0;}
 canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
 </style>
 </head>
 <body>
 
-<img id="logoTop" src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY">
+<div class="logo-container">
+  <img id="logoTop" src="https://iili.io/KK0Gdb4.md.webp" alt="Logo FORTUNA PLAY">
+</div>
+
 <div id="subtitle">Animate a girar, es tu momento de brillar!</div>
 
 <div id="wheelContainer">
@@ -41,6 +71,8 @@ canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;he
 </div>
 
 <button id="spinButton">GIRAR</button>
+<div id="spinInfo"></div>
+<div id="dailyCounter"></div>
 
 <div id="winnerPopup">
   <canvas id="confetti"></canvas>
@@ -48,7 +80,10 @@ canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;he
   <button id="winnerButton">Solicitar premio</button>
 </div>
 
-<img id="finalImage" src="https://iili.io/KK0OCrl.md.png" alt="Imagen final">
+<div class="logo-container">
+  <img id="finalImage" src="https://iili.io/KK0OCrl.md.png" alt="Imagen final">
+</div>
+
 <div id="legal">+18 | Juego Responsable | Apuesta con moderación</div>
 <div id="rights">Todos los derechos reservados FORTUNA PLAY™</div>
 
@@ -63,7 +98,8 @@ const prizes=[
   "500 fichas (sin carga,no ret.)",
   "300 fichas (sin carga ,no ret.)"
 ];
-const cashiers=[
+
+let cashiers=[
   {nombre:'Martin',num:'5491132525913'},
   {nombre:'Lucas',num:'5491171334027'},
   {nombre:'Cami',num:'5491156349123'},
@@ -73,43 +109,142 @@ const cashiers=[
   {nombre:'Ale',num:'5492615027973'}
 ];
 
-// Rueda
-const canvas=document.getElementById('wheelCanvas'),ctx=canvas.getContext('2d'),wheelRadius=canvas.width/2;
+// Shuffle function
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+}
+
+// Estado usuario
+let userData={
+  lastSpin:0,
+  assignedCashier:null
+};
+
+// Contador diario simulado
+let dailyCount=Math.floor(Math.random()*500+100); // empiezo con 100-600 giros aleatorios
+
+const spinBtn=document.getElementById('spinButton');
+const spinInfo=document.getElementById('spinInfo');
+const dailyCounter=document.getElementById('dailyCounter');
+const popup=document.getElementById('winnerPopup');
+const winnerMsg=document.getElementById('winnerMessage');
+const winnerBtn=document.getElementById('winnerButton');
+const canvas=document.getElementById('wheelCanvas');
+const ctx=canvas.getContext('2d');
+const wheelRadius=canvas.width/2;
 let angle=0;
 const colors=["#ff0000","#ff9900","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff"];
+let availableCashiers=[...cashiers]; // lista para rotar
+
+// Dibujar rueda
 function drawWheel(){
   const num=prizes.length,arc=2*Math.PI/num;
   ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<num;i++){
     const start=i*arc,end=start+arc;
-    ctx.beginPath();ctx.moveTo(wheelRadius,wheelRadius);ctx.arc(wheelRadius,wheelRadius,wheelRadius,start+angle,end+angle);
-    ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-    ctx.save();ctx.translate(wheelRadius,wheelRadius);ctx.rotate(start+arc/2+angle);ctx.fillStyle='#000';ctx.font='bold 20px Arial';ctx.textAlign='center';
-    ctx.fillText(String(i+1),wheelRadius/2,10);ctx.restore();
+    ctx.beginPath();
+    ctx.moveTo(wheelRadius,wheelRadius);
+    ctx.arc(wheelRadius,wheelRadius,wheelRadius,start+angle,end+angle);
+    ctx.fillStyle=colors[i%colors.length];
+    ctx.fill();
+    ctx.strokeStyle='#fff';
+    ctx.lineWidth=2;
+    ctx.stroke();
+    ctx.save();
+    ctx.translate(wheelRadius,wheelRadius);
+    ctx.rotate(start+arc/2+angle);
+    ctx.fillStyle='#000';
+    ctx.font='bold 20px Arial';
+    ctx.textAlign='center';
+    ctx.fillText(String(i+1),wheelRadius/2,10);
+    ctx.restore();
   }
 }
 drawWheel();
 
-// Confetti y popup
-const spinBtn=document.getElementById('spinButton'),popup=document.getElementById('winnerPopup'),winnerMsg=document.getElementById('winnerMessage'),winnerBtn=document.getElementById('winnerButton'),confCanvas=document.getElementById('confetti'),confCtx=confCanvas.getContext('2d');
-confCanvas.width=popup.offsetWidth;confCanvas.height=popup.offsetHeight;let confettiParticles=[];
+// Confetti
+const confCanvas=document.getElementById('confetti');
+const confCtx=confCanvas.getContext('2d');
+confCanvas.width=popup.offsetWidth;
+confCanvas.height=popup.offsetHeight;
+let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
+// Rotación de cajero dinámico
+let rotatingCashier=null;
+let rotateInterval=null;
+function startRotatingCashier(){
+  if(userData.assignedCashier) return;
+  if(availableCashiers.length===0){
+    availableCashiers=[...cashiers];
+    shuffle(availableCashiers);
+  }
+  let index=0;
+  rotateInterval=setInterval(()=>{
+    rotatingCashier=availableCashiers[index%availableCashiers.length];
+    spinInfo.textContent=`Cajero disponible: ${rotatingCashier.nombre}`;
+    index++;
+  },250);
+}
+startRotatingCashier();
+
 // Giro
 spinBtn.addEventListener('click',()=>{
-  spinBtn.style.display='none';popup.classList.remove('show');winnerBtn.style.display='none';
-  const assignedCashier=cashiers[Math.floor(Math.random()*cashiers.length)];
+  const now=Date.now();
+  if(now - userData.lastSpin<24*60*60*1000){
+    spinInfo.textContent="Ya giraste hoy, vuelve mañana.";
+    return;
+  }
+
+  spinBtn.disabled=true;
+  userData.lastSpin=now;
+
+  if(rotateInterval) clearInterval(rotateInterval);
+
+  const assignedCashier=userData.assignedCashier || rotatingCashier;
+
   const spinAngle=Math.random()*Math.PI*4+Math.PI*4,duration=3000,start=performance.now(),startAngle=angle;
-  function animate(time){let elapsed=time-start;if(elapsed>duration)elapsed=duration;const progress=elapsed/duration;angle=startAngle+spinAngle*easeOutCubic(progress);drawWheel();if(elapsed<duration)requestAnimationFrame(animate);else finishSpin()}
+  function animate(time){
+    let elapsed=time-start;
+    if(elapsed>duration)elapsed=duration;
+    const progress=elapsed/duration;
+    angle=startAngle+spinAngle*easeOutCubic(progress);
+    drawWheel();
+    if(elapsed<duration)requestAnimationFrame(animate);
+    else finishSpin();
+  }
   requestAnimationFrame(animate);
+
   function finishSpin(){
-    const num=prizes.length,sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num)),prize=prizes[(num-sector+num)%num];
-    winnerMsg.textContent=`¡Ganaste: ${prize}!`;popup.classList.add('show');winnerBtn.style.display='inline-block';
+    const num=prizes.length;
+    const sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
+    const prize=prizes[(num-sector+num)%num];
+
+    winnerMsg.textContent=`¡Ganaste: ${prize}! Cajero asignado: ${assignedCashier.nombre}`;
+    popup.classList.add('show');
+    winnerBtn.style.display='inline-block';
     launchConfetti();
+
+    dailyCount++;
+    dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
+
+    // Guardamos cajero asignado
+    if(!userData.assignedCashier) userData.assignedCashier=assignedCashier;
+
+    // Quitamos el cajero asignado de la lista temporal para próximas rotaciones
+    availableCashiers=availableCashiers.filter(c=>c.nombre!==assignedCashier.nombre);
+
     const nowDate=new Date().toLocaleString();
-    winnerBtn.onclick=()=>{const msg=encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}, muchas gracias.`);window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');popup.classList
-.remove('show')}
+    winnerBtn.onclick=()=>{
+      const msg=encodeURIComponent(`Hola ${assignedCashier.nombre}, quisiera recibir el premio "${prize}" ganado el ${nowDate}, muchas gracias.`);
+      window.open(`https://wa.me/${assignedCashier.num}?text=${msg}`,'_blank');
+      popup.classList.remove('show');
+      spinBtn.disabled=false;
+    }
   }
 });
 
