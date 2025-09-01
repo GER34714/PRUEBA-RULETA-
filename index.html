@@ -118,25 +118,31 @@ button {
   transform: translate(-50%, -50%) scale(0);
   background: rgba(0, 0, 0, 0.95);
   padding: clamp(15px, 4vw, 25px);
-  border-radius: 15px;
+  border-radius: 20px;
   color: #0ff;
   font-size: clamp(1rem, 3vw, 1.4rem);
   text-align: center;
   z-index: 1000;
-  transition: transform .5s;
   text-shadow: 0 0 5px #000, 0 0 8px #000;
   width: 90%;
   max-width: 400px;
   max-height: 80vh;
   overflow-y: auto;
+  border: 3px solid #0ff;
+  box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
 }
 #winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
-#winnerMessage, #winnerDate, #winnerNote {
+#winnerMessage, #winnerDate, #winnerNote, #winnerReturn {
   margin: 5px 0;
 }
 #winnerNote {
   font-weight: bold;
   color: #0ff;
+}
+#winnerReturn {
+  font-weight: bold;
+  color: #0ff;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
 }
 #legal, #rights {
   font-size: clamp(0.7rem, 2vw, 0.9rem);
@@ -186,7 +192,8 @@ canvas#confetti {
   <canvas id="confetti"></canvas>
   <div id="winnerMessage"></div>
   <div id="winnerDate"></div>
-  <div id="winnerNote">¡SACALE CAPTURA A ESTA PANTALLA PARA RECLAMAR TU PREMIO!</div>
+  <div id="winnerNote">¡SÁCALE CAPTURA A ESTA PANTALLA PARA RECLAMAR TU PREMIO!</div>
+  <div id="winnerReturn">¡Volvé en 24 hs!</div>
   <button id="winnerButton">Solicitar premio</button>
 </div>
 
@@ -203,7 +210,7 @@ const prizes=[
   "10% extra (con carga min)",
   "15% extra (con carga min)",
   "20% extra (con carga min)",
-  "25% extra (en su 2da carga)",
+  "30% extra (en su 2da carga)",
   "1000 fichas (sin carga,no ret.)",
   "500 fichas (sin carga,no ret.)",
   "300 fichas (sin carga ,no ret.)"
@@ -227,7 +234,6 @@ function shuffle(array){
 }
 
 let userData=JSON.parse(localStorage.getItem('userData')) || {lastSpin:0,assignedCashier:null};
-let usedCashiers=JSON.parse(localStorage.getItem('usedCashiers')) || [];
 let dailyCount=Math.floor(Math.random()*500+100);
 
 const spinBtn=document.getElementById('spinButton');
@@ -325,10 +331,8 @@ spinBtn.addEventListener('click',()=>{
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
     winnerBtn.onclick=()=>{
-      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané ${prize} y quisiera reclamarlo. Gracias.`);
+      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané un premio y quisiera reclamarlo! Muchas gracias`);
       window.open(`https://api.whatsapp.com/send?phone=${assignedCashier.telefono}&text=${mensaje}`,'_blank');
-      popup.classList.remove('show');
-      spinBtn.disabled=false;
     }
   }
 });
