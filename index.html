@@ -23,7 +23,6 @@ body {
   background-size: cover;
   text-shadow: 0 0 5px #000, 0 0 8px #000;
 }
-
 .logo-container {
   display: flex;
   justify-content: center;
@@ -32,7 +31,6 @@ body {
   margin: 5px 0;
   width: 100%;
 }
-
 #logoTop {
   max-width: 45%;
   width: 100%;
@@ -49,7 +47,6 @@ body {
   75% { filter: drop-shadow(0 0 15px #0f0); }
   100% { filter: drop-shadow(0 0 10px #0ff); }
 }
-
 #finalImage {
   max-width: 90%;
   height: auto;
@@ -57,7 +54,6 @@ body {
   margin: 5px auto 0 auto;
   filter: drop-shadow(0 0 10px #ff0) drop-shadow(0 0 20px #ff0);
 }
-
 #subtitle {
   font-size: clamp(1rem, 2.5vw, 1.5rem);
   margin: 2px 0 5px 0;
@@ -65,7 +61,13 @@ body {
   font-weight: bold;
   text-shadow: 0 0 5px #000, 0 0 8px #000;
 }
-
+#reminder {
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  color: #0ff;
+  font-weight: bold;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
+  margin-bottom: 5px;
+}
 #wheelContainer {
   position: relative;
   width: 70vw;
@@ -73,7 +75,6 @@ body {
   margin: 0 auto 5px auto;
 }
 #wheelCanvas { width: 100%; height: auto; }
-
 #arrow {
   position: absolute;
   top: -10px;
@@ -85,7 +86,6 @@ body {
   border-radius: 2px;
   z-index: 10;
 }
-
 button {
   margin: 5px 0;
   padding: 12px 30px;
@@ -112,7 +112,6 @@ button {
   border: none;
 }
 #winnerButton:hover { transform: scale(1.08); }
-
 #winnerPopup {
   position: fixed;
   top: 50%;
@@ -133,7 +132,6 @@ button {
   overflow-y: auto;
 }
 #winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
-
 #legal, #rights {
   font-size: clamp(0.7rem, 2vw, 0.9rem);
   margin: 2px 0;
@@ -146,7 +144,6 @@ button {
   color: #0ff;
   text-shadow: 0 0 5px #000, 0 0 8px #000;
 }
-
 canvas#confetti {
   position: absolute;
   top: 0;
@@ -155,7 +152,6 @@ canvas#confetti {
   width: 100%;
   height: 100%;
 }
-
 @media (max-width: 600px) {
   #logoTop { max-width: 60%; }
   #wheelContainer { width: 80vw; }
@@ -170,6 +166,7 @@ canvas#confetti {
 </div>
 
 <div id="subtitle">Gira cada 24 hs y gana premios. ¡Invita a tus amigos!</div>
+<div id="reminder">RECORDA SACARLE CAPTURA AL PREMIO!</div>
 
 <div id="wheelContainer">
   <canvas id="wheelCanvas" width="250" height="250"></canvas>
@@ -223,7 +220,7 @@ function shuffle(array){
 
 let userData=JSON.parse(localStorage.getItem('userData')) || {lastSpin:0,assignedCashier:null};
 let usedCashiers=JSON.parse(localStorage.getItem('usedCashiers')) || [];
-let dailyCount=Math.floor(Math.random()*500+100);  
+let dailyCount=Math.floor(Math.random()*500+100);
 
 const spinBtn=document.getElementById('spinButton');
 const dailyCounter=document.getElementById('dailyCounter');
@@ -271,35 +268,18 @@ let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
-// Asignación de cajero fijo por cliente con rotación para nuevos
+// Cajero fijo por cliente con rotación
 function getAssignedCashier() {
   let userData = JSON.parse(localStorage.getItem('userData')) || {};
-
-  // Si el usuario ya tiene cajero asignado, lo devolvemos
   if(userData.assignedCashier) return userData.assignedCashier;
-
-  // Array de cajeros disponibles según la rotación actual
   let usedCashiers = JSON.parse(localStorage.getItem('usedCashiers')) || [];
   let remaining = cashiers.filter(c => !usedCashiers.includes(c.nombre));
-
-  // Si se terminaron los 7 cajeros, reiniciamos la lista y mezclamos
-  if(remaining.length === 0) {
-    usedCashiers = [];
-    shuffle(cashiers);
-    remaining = [...cashiers];
-  }
-
-  // Elegimos un cajero aleatorio de los restantes
-  const assigned = remaining[Math.floor(Math.random() * remaining.length)];
-
-  // Guardamos este cajero en la lista de usados
+  if(remaining.length === 0) { usedCashiers=[]; shuffle(cashiers); remaining=[...cashiers]; }
+  const assigned = remaining[Math.floor(Math.random()*remaining.length)];
   usedCashiers.push(assigned.nombre);
   localStorage.setItem('usedCashiers', JSON.stringify(usedCashiers));
-
-  // Guardamos el cajero asignado para este usuario
-  userData.assignedCashier = assigned;
+  userData.assignedCashier=assigned;
   localStorage.setItem('userData', JSON.stringify(userData));
-
   return assigned;
 }
 
@@ -307,7 +287,6 @@ spinBtn.addEventListener('click',()=>{
   spinBtn.disabled=true;
   const assignedCashier = getAssignedCashier();
   const spinAngle=Math.random()*Math.PI*4+Math.PI*4,duration=3000,start=performance.now(),startAngle=angle;
-
   function animate(time){
     let elapsed=time-start;
     if(elapsed>duration)elapsed=duration;
@@ -323,19 +302,15 @@ spinBtn.addEventListener('click',()=>{
     const num=prizes.length;
     const sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
     const prize=prizes[(num-sector+num)%num];
-
     winnerMsg.textContent=`¡Ganaste: ${prize}!`;
     popup.classList.add('show');
     winnerBtn.style.display='inline-block';
     launchConfetti();
-
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
-
     winnerBtn.onclick=()=>{
-      const nowDate=new Date().toLocaleString();
-      const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}, gané ${prize} y quisiera reclamarlo, gracias`);
-      window.open(`https://wa.me/${assignedCashier.telefono}?text=${mensaje}`,'_blank');
+      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané ${prize} y quisiera reclamarlo, gracias`);
+      window.open(`https://api.whatsapp.com/send?phone=${assignedCashier.telefono}&text=${mensaje}`,'_blank');
       popup.classList.remove('show');
       spinBtn.disabled=false;
     }
