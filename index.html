@@ -330,9 +330,11 @@ spinBtn.addEventListener('click',()=>{
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
+    // Mensaje fijo al cajero
     winnerBtn.onclick=()=>{
       const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané un premio y quisiera reclamarlo! Muchas gracias`);
-      window.open(`https://api.whatsapp.com/send?phone=${assignedCashier.telefono}&text=${mensaje}`,'_blank');
+      const url=`https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
+      window.open(url,'_blank');
     }
   }
 });
