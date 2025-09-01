@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FORTUNA PLAY™</title>
 
-<!-- Open Graph meta tags -->
 <meta property="og:title" content="FORTUNA PLAY™ - Gira la ruleta y gana premios">
 <meta property="og:description" content="Gira la ruleta de FORTUNA PLAY™ cada 24 hs y gana premios increíbles. Invita a tus amigos y multiplica la diversión.">
 <meta property="og:image" content="https://iili.io/KfQm7dF.md.jpg">
@@ -132,6 +131,13 @@ button {
   overflow-y: auto;
 }
 #winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
+#winnerMessage, #winnerDate, #winnerNote {
+  margin: 5px 0;
+}
+#winnerNote {
+  font-weight: bold;
+  color: #0ff;
+}
 #legal, #rights {
   font-size: clamp(0.7rem, 2vw, 0.9rem);
   margin: 2px 0;
@@ -179,6 +185,8 @@ canvas#confetti {
 <div id="winnerPopup">
   <canvas id="confetti"></canvas>
   <div id="winnerMessage"></div>
+  <div id="winnerDate"></div>
+  <div id="winnerNote">¡SACALE CAPTURA A ESTA PANTALLA PARA RECLAMAR TU PREMIO!</div>
   <button id="winnerButton">Solicitar premio</button>
 </div>
 
@@ -226,6 +234,7 @@ const spinBtn=document.getElementById('spinButton');
 const dailyCounter=document.getElementById('dailyCounter');
 const popup=document.getElementById('winnerPopup');
 const winnerMsg=document.getElementById('winnerMessage');
+const winnerDate=document.getElementById('winnerDate');
 const winnerBtn=document.getElementById('winnerButton');
 const canvas=document.getElementById('wheelCanvas');
 const ctx=canvas.getContext('2d');
@@ -302,14 +311,21 @@ spinBtn.addEventListener('click',()=>{
     const num=prizes.length;
     const sector=Math.floor((angle%(2*Math.PI))/(2*Math.PI/num));
     const prize=prizes[(num-sector+num)%num];
+
+    const now = new Date();
+    const nowStr = now.toLocaleString();
+
     winnerMsg.textContent=`¡Ganaste: ${prize}!`;
+    winnerDate.textContent=`Fecha y hora: ${nowStr}`;
     popup.classList.add('show');
     winnerBtn.style.display='inline-block';
     launchConfetti();
+
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
+
     winnerBtn.onclick=()=>{
-      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané ${prize} y quisiera reclamarlo, gracias`);
+      const mensaje=encodeURIComponent(`Hola ${assignedCashier.nombre}, gané ${prize} y quisiera reclamarlo. Gracias.`);
       window.open(`https://api.whatsapp.com/send?phone=${assignedCashier.telefono}&text=${mensaje}`,'_blank');
       popup.classList.remove('show');
       spinBtn.disabled=false;
