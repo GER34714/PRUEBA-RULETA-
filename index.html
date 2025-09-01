@@ -44,7 +44,18 @@ body{
 }
 #wheelContainer{position:relative;width:400px;margin:10px auto;}
 #wheelCanvas{width:100%;height:auto;}
-#arrow{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid #fff;}
+#arrow{
+  position:absolute;
+  top:-15px; /* ajusta según el tamaño de la rueda */
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-bottom:30px solid #fff; /* flecha apuntando hacia abajo */
+  z-index:10;
+}
 button{margin:10px;padding:12px 30px;font-size:1.2rem;border:none;border-radius:50px;cursor:pointer;transition:.3s}
 #spinButton{background:#ff0;color:#4b0082;}
 #winnerPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.95);padding:20px 25px;border-radius:15px;color:#fff;font-size:1.4rem;text-align:center;z-index:1000;transition:transform .5s;}
@@ -52,7 +63,6 @@ button{margin:10px;padding:12px 30px;font-size:1.2rem;border:none;border-radius:
 #winnerButton{margin-top:15px;padding:12px 25px;font-size:1.2rem;border-radius:50px;background:#25D366;color:#fff;cursor:pointer;border:none;}
 #winnerButton:hover{transform:scale(1.08);}
 #legal,#rights{font-size:0.9rem;margin:2px 0;color:#fff}
-#spinInfo{margin-top:5px;font-size:0.95rem;color:#ff0;}
 #dailyCounter{margin-top:5px;font-size:0.95rem;color:#0f0;}
 canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
 </style>
@@ -71,7 +81,6 @@ canvas#confetti{position:absolute;top:0;left:0;pointer-events:none;width:100%;he
 </div>
 
 <button id="spinButton">GIRAR</button>
-<div id="spinInfo"></div>
 <div id="dailyCounter"></div>
 
 <div id="winnerPopup">
@@ -124,10 +133,9 @@ let userData={
 };
 
 // Contador diario simulado
-let dailyCount=Math.floor(Math.random()*500+100); // empiezo con 100-600 giros aleatorios
+let dailyCount=Math.floor(Math.random()*500+100); 
 
 const spinBtn=document.getElementById('spinButton');
-const spinInfo=document.getElementById('spinInfo');
 const dailyCounter=document.getElementById('dailyCounter');
 const popup=document.getElementById('winnerPopup');
 const winnerMsg=document.getElementById('winnerMessage');
@@ -137,7 +145,7 @@ const ctx=canvas.getContext('2d');
 const wheelRadius=canvas.width/2;
 let angle=0;
 const colors=["#ff0000","#ff9900","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff"];
-let availableCashiers=[...cashiers]; // lista para rotar
+let availableCashiers=[...cashiers]; 
 
 // Dibujar rueda
 function drawWheel(){
@@ -174,38 +182,18 @@ let confettiParticles=[];
 function launchConfetti(){confettiParticles=[];for(let i=0;i<100;i++){confettiParticles.push({x:Math.random()*confCanvas.width,y:Math.random()*confCanvas.height-50,r:Math.random()*6+2,dx:(Math.random()-0.5)*4,dy:Math.random()*4+1,color:`hsl(${Math.random()*360},100%,50%)`})}animateConfetti();}
 function animateConfetti(){confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);confettiParticles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.y>confCanvas.height)p.y=0;confCtx.beginPath();confCtx.arc(p.x,p.y,p.r,0,Math.PI*2);confCtx.fillStyle=p.color;confCtx.fill()});if(confettiParticles.length>0){requestAnimationFrame(animateConfetti);confettiParticles=confettiParticles.filter(p=>p.y<confCanvas.height)}}
 
-// Rotación de cajero dinámico
-let rotatingCashier=null;
-let rotateInterval=null;
-function startRotatingCashier(){
-  if(userData.assignedCashier) return;
-  if(availableCashiers.length===0){
-    availableCashiers=[...cashiers];
-    shuffle(availableCashiers);
-  }
-  let index=0;
-  rotateInterval=setInterval(()=>{
-    rotatingCashier=availableCashiers[index%availableCashiers.length];
-    spinInfo.textContent=`Cajero disponible: ${rotatingCashier.nombre}`;
-    index++;
-  },250);
-}
-startRotatingCashier();
-
 // Giro
 spinBtn.addEventListener('click',()=>{
   const now=Date.now();
   if(now - userData.lastSpin<24*60*60*1000){
-    spinInfo.textContent="Ya giraste hoy, vuelve mañana.";
+    alert("Ya giraste hoy, vuelve mañana.");
     return;
   }
 
   spinBtn.disabled=true;
   userData.lastSpin=now;
 
-  if(rotateInterval) clearInterval(rotateInterval);
-
-  const assignedCashier=userData.assignedCashier || rotatingCashier;
+  const assignedCashier=userData.assignedCashier || availableCashiers[Math.floor(Math.random()*availableCashiers.length)];
 
   const spinAngle=Math.random()*Math.PI*4+Math.PI*4,duration=3000,start=performance.now(),startAngle=angle;
   function animate(time){
@@ -232,11 +220,13 @@ spinBtn.addEventListener('click',()=>{
     dailyCount++;
     dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
-    // Guardamos cajero asignado
     if(!userData.assignedCashier) userData.assignedCashier=assignedCashier;
 
-    // Quitamos el cajero asignado de la lista temporal para próximas rotaciones
     availableCashiers=availableCashiers.filter(c=>c.nombre!==assignedCashier.nombre);
+    if(availableCashiers.length===0){
+      availableCashiers=[...cashiers];
+      shuffle(availableCashiers);
+    }
 
     const nowDate=new Date().toLocaleString();
     winnerBtn.onclick=()=>{
