@@ -228,24 +228,21 @@ function getUserId() {
 }
 const userId = getUserId();
 
-// Asignar cajero
+// Asignar cajero fijo por usuario y rotación para nuevos
 function getAssignedCashier() {
   let assignments = JSON.parse(localStorage.getItem('cashierAssignments')) || {};
+  let orderIndex = JSON.parse(localStorage.getItem('cashierRotationIndex')) || 0;
+
   if(assignments[userId]) {
     return cashiers.find(c => c.nombre === assignments[userId]);
   }
 
-  let usedToday = Object.values(assignments);
-  let remaining = cashiers.filter(c => !usedToday.includes(c.nombre));
-
-  if(remaining.length === 0){
-    remaining = [...cashiers];
-    assignments = {};
-  }
-
-  const assigned = remaining[Math.floor(Math.random()*remaining.length)];
+  // Nuevo usuario: asignar cajero según rotación
+  const assigned = cashiers[orderIndex % cashiers.length];
   assignments[userId] = assigned.nombre;
+  orderIndex++;
   localStorage.setItem('cashierAssignments', JSON.stringify(assignments));
+  localStorage.setItem('cashierRotationIndex', orderIndex);
 
   return assigned;
 }
