@@ -195,6 +195,304 @@ const cashiers = [
   {nombre:'Facu',telefono:'5491125127839'}
 ];
 
+// Función para shuffle (si se necesitara)
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+}
+
+// Datos persistentes del usuario
+let userData = JSON.parse(localStorage.getItem('userData')) || {
+  assignedCashier:null,
+  lastSpin:0,
+  lastPrize:null
+};
+
+// Contador diario
+let dailyCount = JSON.parse(localStorage.getItem('dailyCount')) || Math.floor(Math.random()*200+100);
+
+// Elementos
+const spinBtn = document.getElementById('spinButton');
+const dailyCounter = document.getElementById('dailyCounter');
+const popup = document.getElementById('winnerPopup');
+const winnerMsg = document.getElementById('winnerMessage');
+const winnerDate = document.getElementById('winnerDate');
+const winnerBtn = document.getElementById('winnerButton');
+
+// Asignar cajero fijo por usuario
+function getAssignedCashier() {
+  if(!userData.assignedCashier){
+    const assigned = cashiers[Math.floor(Math.random()*cashiers.length)];
+    userData.assignedCashier = assigned;
+    localStorage.setItem('userData', JSON.stringify(userData));
+  }
+  return userData.assignedCashier;
+}
+
+// Mostrar pop-up si giró hoy
+const ms24h = 24*60*60*1000;
+const nowTime = Date.now();
+if(nowTime - userData.lastSpin < ms24h && userData.lastPrize){
+  spinBtn.disabled = true;
+  popup.classList.add('show');
+  winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`;
+  winnerDate.textContent = `Fecha y hora: ${new Date(userData.lastSpin).toLocaleString()}`;
+  dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
+  winnerBtn.style.display = 'inline-block';
+}
+
+// Giro de ruleta
+spinBtn.addEventListener('click', ()=>{
+  spinBtn.disabled = true;
+
+  const assignedCashier = getAssignedCashier();
+
+  // Filtrar premios raros del día
+  let availablePrizes = prizes.filter(p=>{
+    if(p.includes('20%') || p.includes('30%')){
+      const dailyPrizes = JSON.parse(localStorage.getItem('dailyPrizes') || '[]');
+      return !dailyPrizes.includes(p);
+    }
+    return true;
+  });
+
+  // Elegir premio aleatorio
+  const prize = availablePrizes[Math.floor(Math.random()*availablePrizes.length)];
+
+  // Guardar premios raros usados del día
+  if(prize.includes('20%') || prize.includes('30%')){
+    const dailyPrizes = JSON.parse(localStorage.getItem('dailyPrizes') || '[]');
+    dailyPrizes.push(prize);
+    localStorage.setItem('dailyPrizes', JSON.stringify(dailyPrizes));
+  }
+
+  const now = new Date();
+  const nowStr = now.toLocaleString();
+
+  winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`;
+  winnerDate.textContent = `Fecha y hora: ${nowStr}`;
+  popup.classList.add('show');
+  winnerBtn.style.display = 'inline-block';
+
+  // Contador ficticio
+  dailyCount += Math.floor(Math.random()*5+1);
+  localStorage.setItem('dailyCount', dailyCount);
+  dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
+
+  // Guardar datos de usuario
+  userData.lastSpin = now.getTime();
+  userData.lastPrize = prize;
+  localStorage.setItem('userData', JSON.stringify(userData));
+
+  // Botón WhatsApp
+  winnerBtn.onclick = () => {
+    const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${nowStr} y quisiera reclamarlo. Muchas gracias`);
+    const url = `https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
+    window.open(url,'_blank');
+  }
+});
+</script>
+</body>
+</html>
+ html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FORTUNA PLAY™</title>
+
+<meta property="og:title" content="FORTUNA PLAY™ - 🎡Gira la rueda y gana premios🎁🎉">
+<meta property="og:description" content="Gira la ruleta de FORTUNA PLAY™ cada 24 hs y gana premios increíbles. Invita a tus amigos y multiplica la diversión.">
+<meta property="og:image" content="https://iili.io/KfQm7dF.md.jpg">
+<meta property="og:url" content="https://tudominio.com/ruleta.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FORTUNA PLAY™">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial Black, sans-serif;
+  text-align: center;
+  color: #0ff;
+  background: url('https://iili.io/KfreSig.md.webp') no-repeat center center fixed;
+  background-size: cover;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 5px 0;
+  width: 100%;
+}
+#logoTop {
+  max-width: 45%;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 5px auto;
+  filter: drop-shadow(0 0 10px #0ff);
+  animation: neonLogo 2s infinite alternate;
+}
+#finalImage {
+  max-width: 90%;
+  height: auto;
+  display: block;
+  margin: 5px auto 0 auto;
+  filter: drop-shadow(0 0 10px #0ff);
+  animation: neonLogo 2s infinite alternate;
+}
+@keyframes neonLogo {
+  0%   { filter: drop-shadow(0 0 10px #0ff); }
+  25%  { filter: drop-shadow(0 0 15px #f0f); }
+  50%  { filter: drop-shadow(0 0 10px #ff0); }
+  75%  { filter: drop-shadow(0 0 15px #0f0); }
+  100% { filter: drop-shadow(0 0 10px #0ff); }
+}
+.textos-superiores {
+  text-align: center;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-weight: bold;
+  line-height: 1.6;
+  margin: 10px 0 15px 0;
+  color: #0ff;
+  text-shadow: 0 0 5px #000, 0 0 8px #000;
+}
+#wheelContainer {
+  position: relative;
+  width: 70vw;
+  max-width: 250px;
+  margin: 0 auto 5px auto;
+}
+#wheelCanvas { width: 100%; height: auto; }
+#arrow {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 30px;
+  background: #fff;
+  border-radius: 2px;
+  z-index: 10;
+}
+button {
+  margin: 5px 0;
+  padding: 12px 30px;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: .3s;
+}
+#spinButton {
+  background: #ff0;
+  color: #4b0082;
+  font-weight: bold;
+  box-shadow: 0 0 10px #000;
+}
+#winnerButton {
+  margin-top: 10px;
+  padding: 12px 25px;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  border-radius: 50px;
+  background: #25D366;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+#winnerButton:hover { transform: scale(1.08); }
+#winnerPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(0, 0, 0, 0.95);
+  padding: clamp(15px, 4vw, 25px);
+  border-radius: 20px;
+  color: #0ff;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  text-align: center;
+  z-index: 1000;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 3px solid #0ff;
+  box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
+}
+#winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
+#winnerMessage, #winnerDate, #winnerNote, #winnerReturn { margin: 5px 0; }
+#winnerNote { font-weight: bold; color: #0ff; }
+#winnerReturn { font-weight: bold; color: #0ff; font-size: clamp(1rem, 2.5vw, 1.2rem); }
+#legal, #rights { font-size: clamp(0.7rem, 2vw, 0.9rem); margin: 2px 0; color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
+#dailyCounter { margin-top: 3px; font-size: clamp(0.8rem, 2vw, 0.95rem); color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
+canvas#confetti { position: absolute; top: 0; left: 0; pointer-events: none; width: 100%; height: 100%; }
+@media (max-width: 600px) {
+  #logoTop { max-width: 60%; }
+  #wheelContainer { width: 80vw; }
+  button { padding: 10px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="logo-container">
+  <img id="logoTop" src="https://iili.io/KfLSxhG.md.webp" alt="Logo FORTUNA PLAY">
+</div>
+
+<div class="textos-superiores">
+  🎁 GIRA CADA 24 HS Y GANA 🎁 <br>
+  🙌 INVITA A TUS AMIGOS 🙌 <br>
+  📸 RECORDÁ SACARLE CAPTURA A LOS PREMIOS 📸
+</div>
+
+<div id="wheelContainer">
+  <canvas id="wheelCanvas" width="250" height="250"></canvas>
+  <div id="arrow"></div>
+</div>
+
+<button id="spinButton">GIRAR</button>
+<div id="dailyCounter"></div>
+
+<div id="winnerPopup">
+  <canvas id="confetti"></canvas>
+  <div id="winnerMessage"></div>
+  <div id="winnerDate"></div>
+  <div id="winnerNote">¡SÁCALE CAPTURA A ESTA PANTALLA PARA RECLAMAR TU PREMIO!</div>
+  <div id="winnerReturn">¡Volvé en 24 hs!</div>
+  <button id="winnerButton">Solicitar premio</button>
+</div>
+
+<div class="logo-container">
+  <img id="finalImage" src="https://iili.io/KK0OCrl.md.png" alt="Imagen final">
+</div>
+
+<div id="legal">+18 | Juego Responsable | Apuesta con moderación</div>
+<div id="rights">Todos los derechos reservados FORTUNA PLAY™</div>
+
+<script>
+// Premios y cajeros
+const prizes = [
+  "10% extra (con carga min)",
+  "15% extra (con carga min)",
+  "20% extra (en mi 2da carga)",
+  "30% extra (en mi 2da carga)",
+  "1000 fichas (sin carga,no ret.)",
+  "500 fichas (sin carga,no ret.)",
+  "300 fichas (sin carga ,no ret.)"
+];
+
+const cashiers = [
+  {nombre:'Lucas',telefono:'5491171334027'},
+  {nombre:'Cami',telefono:'5491156349123'},
+  {nombre:'Joaki',telefono:'5491123365501'},
+  {nombre:'Facu',telefono:'5491125127839'}
+];
+
 function shuffle(array){
   for(let i=array.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
