@@ -188,19 +188,11 @@ const cashiers = [
   {nombre:'Facu',telefono:'5491125127839'}
 ];
 
-function shuffle(array){
-  for(let i=array.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [array[i],array[j]]=[array[j],array[i]];
-  }
-}
-
 // Datos persistentes
 let userData = JSON.parse(localStorage.getItem('userData')) || {
-  assignedCashier:null,
-  lastPrize:null
+  lastPrize:null,
+  lastCashierIndex:null
 };
-
 let dailyCount = JSON.parse(localStorage.getItem('dailyCount')) || Math.floor(Math.random()*200+100);
 
 // Elementos
@@ -211,20 +203,6 @@ const winnerMsg = document.getElementById('winnerMessage');
 const winnerDate = document.getElementById('winnerDate');
 const winnerBtn = document.getElementById('winnerButton');
 
-// ROTACIÓN ESTRICTA DE CAJEROS
-let lastIndex = parseInt(localStorage.getItem('lastCashierIndex')) || 0;
-function getAssignedCashier() {
-  if(userData.assignedCashier){
-    return cashiers.find(c => c.nombre === userData.assignedCashier.nombre);
-  }
-  const assigned = cashiers[lastIndex % cashiers.length];
-  userData.assignedCashier = assigned;
-  localStorage.setItem('userData', JSON.stringify(userData));
-  lastIndex++;
-  localStorage.setItem('lastCashierIndex', lastIndex);
-  return assigned;
-}
-
 // ---- RUEDA DE LA FORTUNA ----
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
@@ -234,7 +212,6 @@ const angleStep = (2*Math.PI)/size;
 let currentAngle = 0;
 
 function drawWheel(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<size;i++){
     ctx.beginPath();
     ctx.moveTo(150,150);
@@ -247,9 +224,6 @@ function drawWheel(){
     ctx.save();
     ctx.translate(150,150);
     ctx.rotate(currentAngle + i*angleStep + angleStep/2);
-    ctx.textAlign="right";
-    ctx.fillStyle="#fff";
-    ctx.font="bold 14px Arial";
     ctx.restore();
   }
 }
@@ -276,9 +250,42 @@ function spinWheel(finalIndex, callback){
 }
 function easeOutCubic(t){ return (--t)*t*t+1; }
 
+// ---- ASIGNAR CAJERO ROTATIVO ----
+function getNextCashier() {
+  let index = userData.lastCashierIndex;
+  if(index === null || index >= cashiers.length-1) index = 0;
+  else index++;
+  userData.lastCashierIndex = index;
+  localStorage.setItem('userData', JSON.stringify(userData));
+  return cashiers[index];
+}
+
+// ---- MOSTRAR POPUP SI YA HAY PREMIO ----
+function checkExistingPrize() {
+  if(userData.lastPrize){
+    const assignedCashier = getNextCashier(); // mantiene último índice para popup
+    winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`;
+    const now = new Date();
+    winnerDate.textContent = `Fecha y hora: ${now.toLocaleString()}`;
+    popup.classList.add('show');
+    spinBtn.disabled = true;
+
+    winnerBtn.onclick = ()=>{
+      const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${userData.lastPrize} el ${now.toLocaleString()} y quisiera reclamarlo. Muchas gracias`);
+      const url = `https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
+      window.open(url,'_blank');
+    };
+  }
+}
+checkExistingPrize();
+
+// ---- CONTADOR DIARIO ----
+dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
+
+// ---- EVENTO GIRAR ----
 spinBtn.addEventListener('click',()=>{
   spinBtn.disabled = true;
-  const assignedCashier = getAssignedCashier();
+  const assignedCashier = getNextCashier();
 
   const availablePrizes = prizes.filter(p=>{
     if(p.includes('20%') || p.includes('30%')){
@@ -287,8 +294,9 @@ spinBtn.addEventListener('click',()=>{
     }
     return true;
   });
-  shuffle(availablePrizes);
-  const prize = availablePrizes[0];
+
+  // Elegir premio
+  const prize = availablePrizes[Math.floor(Math.random()*availablePrizes.length)];
   const prizeIndex = prizes.indexOf(prize);
 
   if(prize.includes('20%') || prize.includes('30%')){
@@ -297,13 +305,12 @@ spinBtn.addEventListener('click',()=>{
     localStorage.setItem('dailyPrizes', JSON.stringify(dailyPrizes));
   }
 
+  // Girar rueda
   spinWheel(prizeIndex, ()=>{
     const now = new Date();
-    const nowStr = now.toLocaleString();
     winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`;
-    winnerDate.textContent = `Fecha y hora: ${nowStr}`;
+    winnerDate.textContent = `Fecha y hora: ${now.toLocaleString()}`;
     popup.classList.add('show');
-    winnerBtn.style.display='inline-block';
 
     dailyCount += Math.floor(Math.random()*5+1);
     localStorage.setItem('dailyCount', dailyCount);
@@ -313,7 +320,7 @@ spinBtn.addEventListener('click',()=>{
     localStorage.setItem('userData', JSON.stringify(userData));
 
     winnerBtn.onclick = ()=>{
-      const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${nowStr} y quisiera reclamarlo. Muchas gracias`);
+      const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${now.toLocaleString()} y quisiera reclamarlo. Muchas gracias`);
       const url = `https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
       window.open(url,'_blank');
     };
