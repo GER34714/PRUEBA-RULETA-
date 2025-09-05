@@ -196,7 +196,7 @@ function shuffle(array){
   }
 }
 
-// ---- Datos persistentes ----
+// Datos persistentes
 let dailyCount = JSON.parse(localStorage.getItem('dailyCount')) || Math.floor(Math.random()*200+100);
 let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastPrize: null,
@@ -204,7 +204,7 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastWinTime: null
 };
 
-// ---- Elementos ----
+// Elementos
 const spinBtn = document.getElementById('spinButton');
 const dailyCounter = document.getElementById('dailyCounter');
 const popup = document.getElementById('winnerPopup');
@@ -212,7 +212,7 @@ const winnerMsg = document.getElementById('winnerMessage');
 const winnerDate = document.getElementById('winnerDate');
 const winnerBtn = document.getElementById('winnerButton');
 
-// ---- Función para verificar 24 hs ----
+// Verifica 24 hs
 function canSpin() {
   if(!userData.lastWinTime) return true;
   const last = new Date(userData.lastWinTime);
@@ -221,7 +221,7 @@ function canSpin() {
   return diffMs >= 24*60*60*1000;
 }
 
-// ---- Cajero rotativo ----
+// Cajero rotativo
 function getNextCashier(){
   let idx = userData.lastCashierIndex ?? -1;
   idx = (idx+1)%cashiers.length;
@@ -230,7 +230,7 @@ function getNextCashier(){
   return cashiers[idx];
 }
 
-// ---- Mostrar popup si ya ganó ----
+// Mostrar popup si ya ganó
 function checkExistingPrize() {
   if(userData.lastPrize && userData.lastWinTime){
     const assignedCashier = getNextCashier();
@@ -246,7 +246,7 @@ function checkExistingPrize() {
   }
 }
 
-// ---- Rueda de la fortuna ----
+// Rueda de la fortuna
 const canvas = document.getElementById('wheelCanvas');
 const ctx = canvas.getContext('2d');
 const colors = ["#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF","#FFA500"];
@@ -273,4 +273,76 @@ function drawWheel(){
 drawWheel();
 
 function spinWheel(finalIndex, callback){
-  const spins
+  const spins = 5 + Math.random()*3;
+  const endAngle = (2*Math.PI)*spins + finalIndex*angleStep + angleStep/2;
+  let start = null;
+  function animate(timestamp){
+    if(!start) start = timestamp;
+    const progress = (timestamp-start)/3000;
+    if(progress<1){
+      currentAngle = endAngle*easeOutCubic(progress);
+      drawWheel();
+      requestAnimationFrame(animate);
+    } else{
+      currentAngle = endAngle;
+      drawWheel();
+      if(callback) callback();
+    }
+  }
+  requestAnimationFrame(animate);
+}
+function easeOutCubic(t){ return (--t)*t*t+1; }
+
+// Evento girar
+if(!canSpin()){
+  spinBtn.disabled = true;
+  checkExistingPrize();
+}
+
+spinBtn.addEventListener('click', ()=>{
+  if(!canSpin()) return;
+
+  spinBtn.disabled = true;
+  const assignedCashier = getNextCashier();
+
+  const availablePrizes = prizes.filter(p=>{
+    if(p.includes('20%') || p.includes('30%')){
+      const dailyPrizes = JSON.parse(localStorage.getItem('dailyPrizes') || '[]');
+      return !dailyPrizes.includes(p);
+    }
+    return true;
+  });
+
+  shuffle(availablePrizes);
+  const prize = availablePrizes[0];
+  const prizeIndex = prizes.indexOf(prize);
+
+  if(prize.includes('20%') || prize.includes('30%')){
+    const dailyPrizes = JSON.parse(localStorage.getItem('dailyPrizes') || '[]');
+    dailyPrizes.push(prize);
+    localStorage.setItem('dailyPrizes', JSON.stringify(dailyPrizes));
+  }
+
+  spinWheel(prizeIndex, ()=>{
+    const now = new Date();
+    winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`;
+    winnerDate.textContent = `Fecha y hora: ${now.toLocaleString()}`;
+    popup.classList.add('show');
+
+    dailyCount += Math.floor(Math.random()*5+1);
+    localStorage.setItem('dailyCount', dailyCount);
+    dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
+
+    userData.lastPrize = prize;
+    userData.lastWinTime = now.toISOString();
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    winnerBtn.onclick = ()=>{
+      const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${now.toLocaleString()} y quisiera reclamarlo. Muchas gracias`);
+      window.open(`https://wa.me/${assignedCashier.telefono}?text=${mensaje}`,'_blank');
+    };
+  });
+});
+</script>
+</body>
+</html>
