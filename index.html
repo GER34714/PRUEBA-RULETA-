@@ -188,7 +188,6 @@ const cashiers = [
   {nombre:'Facu',telefono:'5491125127839'}
 ];
 
-// Shuffle
 function shuffle(array){
   for(let i=array.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
@@ -201,6 +200,7 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   assignedCashier:null,
   lastPrize:null
 };
+
 let dailyCount = JSON.parse(localStorage.getItem('dailyCount')) || Math.floor(Math.random()*200+100);
 
 // Elementos
@@ -211,15 +211,17 @@ const winnerMsg = document.getElementById('winnerMessage');
 const winnerDate = document.getElementById('winnerDate');
 const winnerBtn = document.getElementById('winnerButton');
 
-// ---- CAJERO ROTATIVO ----
+// ROTACIÓN ESTRICTA DE CAJEROS
+let lastIndex = parseInt(localStorage.getItem('lastCashierIndex')) || 0;
 function getAssignedCashier() {
   if(userData.assignedCashier){
     return cashiers.find(c => c.nombre === userData.assignedCashier.nombre);
   }
-  shuffle(cashiers);
-  const assigned = cashiers[0]; // siempre el primero tras shuffle
+  const assigned = cashiers[lastIndex % cashiers.length];
   userData.assignedCashier = assigned;
   localStorage.setItem('userData', JSON.stringify(userData));
+  lastIndex++;
+  localStorage.setItem('lastCashierIndex', lastIndex);
   return assigned;
 }
 
@@ -232,6 +234,7 @@ const angleStep = (2*Math.PI)/size;
 let currentAngle = 0;
 
 function drawWheel(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<size;i++){
     ctx.beginPath();
     ctx.moveTo(150,150);
@@ -244,10 +247,12 @@ function drawWheel(){
     ctx.save();
     ctx.translate(150,150);
     ctx.rotate(currentAngle + i*angleStep + angleStep/2);
+    ctx.textAlign="right";
+    ctx.fillStyle="#fff";
+    ctx.font="bold 14px Arial";
     ctx.restore();
   }
 }
-
 drawWheel();
 
 function spinWheel(finalIndex, callback){
@@ -271,7 +276,6 @@ function spinWheel(finalIndex, callback){
 }
 function easeOutCubic(t){ return (--t)*t*t+1; }
 
-// Giro de ruleta
 spinBtn.addEventListener('click',()=>{
   spinBtn.disabled = true;
   const assignedCashier = getAssignedCashier();
