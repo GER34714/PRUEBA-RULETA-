@@ -225,17 +225,29 @@ if(nowTime - userData.lastSpin < ms24h && userData.lastPrize){
   winnerBtn.style.display = 'inline-block';
 }
 
-// Dibujar ruleta con múltiples colores alternados, sin textos
+// Dibujar ruleta con 3 colores y efecto de brillo
 function drawWheel(prizes){
   const numSegments = prizes.length;
   const angle = 2*Math.PI/numSegments;
-  const colors = ['#FFD700','#800080','#9400D3','#FF8C00']; // Dorado, púrpura, violeta, naranja
+  const colors = ['#FFD700','#800080','#9400D3']; // Dorado, púrpura, violeta
+  const gradientRadius = 125;
+
   for(let i=0;i<numSegments;i++){
     ctx.beginPath();
     ctx.moveTo(125,125);
     ctx.arc(125,125,125,i*angle,(i+1)*angle);
-    ctx.fillStyle = colors[i % colors.length];
+
+    // Degradado radial para brillo
+    const grad = ctx.createRadialGradient(125,125,30,125,125,gradientRadius);
+    grad.addColorStop(0, '#fff'); // centro brillante
+    grad.addColorStop(0.2, colors[i % colors.length]);
+    grad.addColorStop(1, '#00000010'); // borde sutil
+
+    ctx.fillStyle = grad;
     ctx.fill();
+    ctx.strokeStyle = '#00000080';
+    ctx.lineWidth = 2;
+    ctx.stroke();
   }
 }
 drawWheel(prizes);
