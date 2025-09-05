@@ -215,7 +215,8 @@ function getAssignedCashier() {
   if(userData.assignedCashier){
     return cashiers.find(c => c.nombre === userData.assignedCashier.nombre);
   }
-  const assigned = cashiers[Math.floor(Math.random()*cashiers.length)];
+  shuffle(cashiers); // rotar aleatoriamente
+  const assigned = cashiers[0];
   userData.assignedCashier = assigned;
   localStorage.setItem('userData', JSON.stringify(userData));
   return assigned;
@@ -230,6 +231,7 @@ const angleStep = (2*Math.PI)/size;
 let currentAngle = 0;
 
 function drawWheel(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<size;i++){
     ctx.beginPath();
     ctx.moveTo(150,150);
@@ -239,18 +241,14 @@ function drawWheel(){
     ctx.fill();
     ctx.strokeStyle="#000";
     ctx.stroke();
-    // Texto premios
-    ctx.save();
-    ctx.translate(150,150);
-    ctx.rotate(currentAngle + i*angleStep + angleStep/2);
-    ctx.textAlign="right";
-    ctx.fillStyle="#fff";
-    ctx.font="bold 14px Arial";
-    // No dibujar los textos para mantener limpio
-    ctx.restore();
   }
+  // Texto en el centro
+  ctx.fillStyle="#0ff";
+  ctx.font="bold 18px Arial";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText("RUEDA DE LA FORTUNA",150,150);
 }
-
 drawWheel();
 
 // Animación de giro
@@ -323,7 +321,6 @@ spinBtn.addEventListener('click',()=>{
     };
   });
 });
-
 </script>
 </body>
 </html>
