@@ -30,23 +30,14 @@ body {
   margin: 5px 0;
   width: 100%;
 }
-#logoTop {
-  max-width: 45%;
-  width: 100%;
-  height: auto;
+#logoTop, #finalImage {
   display: block;
   margin: 0 auto 5px auto;
   filter: drop-shadow(0 0 10px #0ff);
   animation: neonLogo 2s infinite alternate;
 }
-#finalImage {
-  max-width: 90%;
-  height: auto;
-  display: block;
-  margin: 5px auto 0 auto;
-  filter: drop-shadow(0 0 10px #0ff);
-  animation: neonLogo 2s infinite alternate;
-}
+#logoTop { max-width: 45%; width: 100%; height: auto; }
+#finalImage { max-width: 90%; height: auto; }
 @keyframes neonLogo {
   0%   { filter: drop-shadow(0 0 10px #0ff); }
   25%  { filter: drop-shadow(0 0 15px #f0f); }
@@ -195,22 +186,11 @@ const cashiers = [
   {nombre:'Facu',telefono:'5491125127839'}
 ];
 
-// Función para shuffle (si se necesitara)
-function shuffle(array){
-  for(let i=array.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [array[i],array[j]]=[array[j],array[i]];
-  }
-}
-
-// Datos persistentes del usuario
 let userData = JSON.parse(localStorage.getItem('userData')) || {
   assignedCashier:null,
   lastSpin:0,
   lastPrize:null
 };
-
-// Contador diario
 let dailyCount = JSON.parse(localStorage.getItem('dailyCount')) || Math.floor(Math.random()*200+100);
 
 // Elementos
@@ -220,8 +200,10 @@ const popup = document.getElementById('winnerPopup');
 const winnerMsg = document.getElementById('winnerMessage');
 const winnerDate = document.getElementById('winnerDate');
 const winnerBtn = document.getElementById('winnerButton');
+const wheelCanvas = document.getElementById('wheelCanvas');
+const ctx = wheelCanvas.getContext('2d');
 
-// Asignar cajero fijo por usuario
+// Asignar cajero fijo
 function getAssignedCashier() {
   if(!userData.assignedCashier){
     const assigned = cashiers[Math.floor(Math.random()*cashiers.length)];
@@ -231,7 +213,7 @@ function getAssignedCashier() {
   return userData.assignedCashier;
 }
 
-// Mostrar pop-up si giró hoy
+// Mostrar popup si ya giró
 const ms24h = 24*60*60*1000;
 const nowTime = Date.now();
 if(nowTime - userData.lastSpin < ms24h && userData.lastPrize){
@@ -243,13 +225,54 @@ if(nowTime - userData.lastSpin < ms24h && userData.lastPrize){
   winnerBtn.style.display = 'inline-block';
 }
 
+// Dibujar ruleta con múltiples colores alternados, sin textos
+function drawWheel(prizes){
+  const numSegments = prizes.length;
+  const angle = 2*Math.PI/numSegments;
+  const colors = ['#FFD700','#800080','#9400D3','#FF8C00']; // Dorado, púrpura, violeta, naranja
+  for(let i=0;i<numSegments;i++){
+    ctx.beginPath();
+    ctx.moveTo(125,125);
+    ctx.arc(125,125,125,i*angle,(i+1)*angle);
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+  }
+}
+drawWheel(prizes);
+
+// Animación de giro
+function spinWheel(prizeIndex){
+  const numSegments = prizes.length;
+  const anglePerSegment = 2*Math.PI/numSegments;
+  const randomRotations = Math.random()*2+3; // 3 a 5 vueltas
+  const targetAngle = 2*Math.PI*randomRotations - prizeIndex*anglePerSegment - anglePerSegment/2;
+
+  let currentAngle = 0;
+  const duration = 4000; // 4s
+  const start = performance.now();
+
+  function animate(time){
+    const t = Math.min(1,(time-start)/duration);
+    const ease = 1 - Math.pow(1-t,3);
+    currentAngle = targetAngle*ease;
+    ctx.save();
+    ctx.clearRect(0,0,250,250);
+    ctx.translate(125,125);
+    ctx.rotate(currentAngle);
+    ctx.translate(-125,-125);
+    drawWheel(prizes);
+    ctx.restore();
+    if(t<1) requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
+
 // Giro de ruleta
 spinBtn.addEventListener('click', ()=>{
   spinBtn.disabled = true;
-
   const assignedCashier = getAssignedCashier();
 
-  // Filtrar premios raros del día
+  // Premios aleatorios
   let availablePrizes = prizes.filter(p=>{
     if(p.includes('20%') || p.includes('30%')){
       const dailyPrizes = JSON.parse(localStorage.getItem('dailyPrizes') || '[]');
@@ -258,36 +281,34 @@ spinBtn.addEventListener('click', ()=>{
     return true;
   });
 
-  // Elegir premio aleatorio
-  const prize = availablePrizes[Math.floor(Math.random()*availablePrizes.length)];
+  const prizeIndex = Math.floor(Math.random()*availablePrizes.length);
+  const prize = availablePrizes[prizeIndex];
 
-  // Guardar premios raros usados del día
   if(prize.includes('20%') || prize.includes('30%')){
     const dailyPrizes = JSON.parse(localStorage.getItem('dailyPrizes') || '[]');
     dailyPrizes.push(prize);
     localStorage.setItem('dailyPrizes', JSON.stringify(dailyPrizes));
   }
 
+  const realIndex = prizes.indexOf(prize);
+  spinWheel(realIndex);
+
   const now = new Date();
   const nowStr = now.toLocaleString();
-
   winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`;
   winnerDate.textContent = `Fecha y hora: ${nowStr}`;
   popup.classList.add('show');
   winnerBtn.style.display = 'inline-block';
 
-  // Contador ficticio
   dailyCount += Math.floor(Math.random()*5+1);
   localStorage.setItem('dailyCount', dailyCount);
   dailyCounter.textContent=`Hoy ya giraron ${dailyCount} personas.`;
 
-  // Guardar datos de usuario
   userData.lastSpin = now.getTime();
   userData.lastPrize = prize;
   localStorage.setItem('userData', JSON.stringify(userData));
 
-  // Botón WhatsApp
-  winnerBtn.onclick = () => {
+  winnerBtn.onclick = ()=>{
     const mensaje = encodeURIComponent(`Hola ${assignedCashier.nombre}! Gané ${prize} el ${nowStr} y quisiera reclamarlo. Muchas gracias`);
     const url = `https://wa.me/${assignedCashier.telefono}?text=${mensaje}`;
     window.open(url,'_blank');
