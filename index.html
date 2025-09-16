@@ -88,10 +88,11 @@ button {
   font-weight: bold;
   box-shadow: 0 0 10px #000;
 }
+#spinButton:hover { transform: scale(1.05); }
 #winnerButton {
   margin-top: 10px;
   padding: 12px 25px;
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
   border-radius: 50px;
   background: #25D366;
   color: #fff;
@@ -108,10 +109,9 @@ button {
   padding: clamp(15px, 4vw, 25px);
   border-radius: 20px;
   color: #0ff;
-  font-size: clamp(1rem, 3vw, 1.4rem);
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
   text-align: center;
   z-index: 1000;
-  text-shadow: 0 0 5px #000, 0 0 8px #000;
   width: 90%;
   max-width: 400px;
   max-height: 80vh;
@@ -268,10 +268,11 @@ let currentAngle = 0;
 
 function drawWheel(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  const center = canvas.width / 2;
   for(let i=0;i<size;i++){
     ctx.beginPath();
-    ctx.moveTo(170,170);
-    ctx.arc(170,170,170,currentAngle+i*angleStep,currentAngle+(i+1)*angleStep);
+    ctx.moveTo(center, center);
+    ctx.arc(center, center, center, currentAngle+i*angleStep, currentAngle+(i+1)*angleStep);
     ctx.closePath();
     ctx.fillStyle = colors[i%colors.length];
     ctx.fill();
@@ -311,14 +312,13 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  if(!userData.assignedCashier){
-    let lastIndex = localStorage.getItem("lastCashierIndex") || 0;
-    lastIndex = parseInt(lastIndex);
-    const nextIndex = (lastIndex + 1) % cashiers.length;
-    userData.assignedCashier = cashiers[nextIndex];
-    localStorage.setItem("lastCashierIndex", nextIndex);
-  }
+  // Alternar cajeros de forma pareja
+  let lastIndex = parseInt(localStorage.getItem("lastCashierIndex")) || 0;
+  const nextIndex = (lastIndex + 1) % cashiers.length;
+  userData.assignedCashier = cashiers[nextIndex];
+  localStorage.setItem("lastCashierIndex", nextIndex);
 
+  // Elegir premio aleatorio
   const shuffledPrizes = [...prizes].sort(()=>Math.random()-0.5);
   const prize = shuffledPrizes[0];
   userData.lastPrize = prize;
@@ -333,7 +333,9 @@ spinBtn.addEventListener('click', ()=>{
     updateCounter(24*60*60*1000);
 
     winnerBtn.onclick = ()=>{
-      const msg = encodeURIComponent(`Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`);
+      const msg = encodeURIComponent(
+        `Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
+      );
       window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
     };
   });
