@@ -122,7 +122,7 @@ function showExistingPrize() {
     const diff = now - last;
 
     if (diff < 24 * 60 * 60 * 1000) {
-      winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`; // <-- SIN mostrar cajero
+      winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉 con ${userData.assignedCashier}`;
       winnerDate.textContent = `Fecha y hora: ${last.toLocaleString()}`;
       popup.classList.add('show');
       spinBtn.disabled = true;
@@ -130,7 +130,7 @@ function showExistingPrize() {
 
       winnerBtn.onclick = () => {
         const msg = encodeURIComponent(
-          `Hola! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
+          `Hola ${userData.assignedCashier}! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
         );
         alert(`Abrir WhatsApp: ${msg}`);
         //window.open(`https://wa.me/`,'_blank'); // link real si querés
@@ -226,14 +226,14 @@ spinBtn.addEventListener('click', ()=>{
 
   const prizeIndex = prizes.indexOf(prize);
   spinWheel(prizeIndex, ()=>{
-    winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`; // <-- SIN mostrar cajero
+    winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉 con ${userData.assignedCashier}`;
     winnerDate.textContent = `Fecha y hora: ${new Date(userData.lastWinTime).toLocaleString()}`;
     popup.classList.add('show');
     updateCounter(24*60*60*1000);
 
     winnerBtn.onclick = ()=>{
       const msg = encodeURIComponent(
-        `Hola! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
+        `Hola ${userData.assignedCashier}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
       );
       alert(`Abrir WhatsApp: ${msg}`);
       //window.open(`https://wa.me/`,'_blank'); // link real si querés
