@@ -13,34 +13,26 @@
 <meta property="og:site_name" content="FORTUNA PLAY™">
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial Black, sans-serif;
-  text-align: center;
-  color: #0ff;
-  background: url('https://iili.io/KCkmp4I.md.webp') no-repeat center center fixed;
-  background-size: cover;
-  text-shadow: 0 0 5px #000, 0 0 8px #000;
-}
-.logo-container { display: flex; justify-content: center; align-items: center; flex-direction: column; margin: 5px 0; width: 100%; }
-#logoTop, #finalImage { max-width: 45%; width: 100%; height: auto; display: block; margin: 0 auto 5px auto; filter: drop-shadow(0 0 10px #0ff); animation: neonLogo 2s infinite alternate; }
-@keyframes neonLogo { 0% { filter: drop-shadow(0 0 10px #0ff); } 25% { filter: drop-shadow(0 0 15px #f0f); } 50% { filter: drop-shadow(0 0 10px #ff0); } 75% { filter: drop-shadow(0 0 15px #0f0); } 100% { filter: drop-shadow(0 0 10px #0ff); } }
-.textos-superiores { text-align: center; font-size: clamp(1rem, 2.5vw, 1.3rem); font-weight: bold; line-height: 1.6; margin: 10px 0 15px 0; color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
-#wheelContainer { position: relative; width: 90vw; max-width: 340px; margin: 0 auto 5px auto; }
-#wheelCanvas { width: 100%; height: auto; }
-#arrow { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 6px; height: 35px; background: #fff; border-radius: 2px; z-index: 10; }
-button { margin: 5px 0; padding: 12px 30px; font-size: clamp(1rem, 2vw, 1.2rem); border: none; border-radius: 50px; cursor: pointer; transition: .3s; }
-#spinButton { background: #ff0; color: #4b0082; font-weight: bold; box-shadow: 0 0 10px #000; }
-#winnerButton { margin-top: 10px; padding: 12px 25px; font-size: clamp(1rem, 2vw, 1.2rem); border-radius: 50px; background: #25D366; color: #fff; cursor: pointer; border: none; }
-#winnerButton:hover { transform: scale(1.08); }
-#winnerPopup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(0, 0, 0, 0.95); padding: clamp(15px, 4vw, 25px); border-radius: 20px; color: #0ff; font-size: clamp(1rem, 3vw, 1.4rem); text-align: center; z-index: 1000; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; border: 3px solid #0ff; box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff; }
-#winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
-#winnerMessage, #winnerDate, #winnerNote, #winnerReturn { margin: 5px 0; }
-#winnerNote { font-weight: bold; color: #0ff; }
-#winnerReturn { font-weight: bold; color: #0ff; font-size: clamp(1rem, 2.5vw, 1.2rem); }
-#legal, #rights { font-size: clamp(0.7rem, 2vw, 0.9rem); margin: 2px 0; color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
-#dailyCounter { margin-top: 3px; font-size: clamp(0.8rem, 2vw, 0.95rem); color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
-@media (max-width: 600px) { #logoTop { max-width: 60%; } #wheelContainer { width: 85vw; } button { padding: 10px 20px; } }
+body { margin:0; font-family: Arial Black, sans-serif; text-align:center; color:#0ff; background:url('https://iili.io/KCkmp4I.md.webp') no-repeat center center fixed; background-size:cover; text-shadow:0 0 5px #000,0 0 8px #000; }
+.logo-container { display:flex; justify-content:center; align-items:center; flex-direction:column; margin:5px 0; width:100%; }
+#logoTop, #finalImage { max-width:45%; width:100%; height:auto; display:block; margin:0 auto 5px auto; filter:drop-shadow(0 0 10px #0ff); animation: neonLogo 2s infinite alternate; }
+@keyframes neonLogo { 0%{filter:drop-shadow(0 0 10px #0ff);} 25%{filter:drop-shadow(0 0 15px #f0f);} 50%{filter:drop-shadow(0 0 10px #ff0);} 75%{filter:drop-shadow(0 0 15px #0f0);} 100%{filter:drop-shadow(0 0 10px #0ff);} }
+.textos-superiores { text-align:center; font-size:clamp(1rem,2.5vw,1.3rem); font-weight:bold; line-height:1.6; margin:10px 0 15px 0; color:#0ff; text-shadow:0 0 5px #000,0 0 8px #000; }
+#wheelContainer { position:relative; width:90vw; max-width:340px; margin:0 auto 5px auto; }
+#wheelCanvas { width:100%; height:auto; }
+#arrow { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:6px; height:35px; background:#fff; border-radius:2px; z-index:10; }
+button { margin:5px 0; padding:12px 30px; font-size:clamp(1rem,2vw,1.2rem); border:none; border-radius:50px; cursor:pointer; transition:.3s; }
+#spinButton { background:#ff0; color:#4b0082; font-weight:bold; box-shadow:0 0 10px #000; }
+#winnerButton { margin-top:10px; padding:12px 25px; font-size:clamp(1rem,2vw,1.2rem); border-radius:50px; background:#25D366; color:#fff; cursor:pointer; border:none; }
+#winnerButton:hover { transform:scale(1.08); }
+#winnerPopup { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); background:rgba(0,0,0,0.95); padding:clamp(15px,4vw,25px); border-radius:20px; color:#0ff; font-size:clamp(1rem,3vw,1.4rem); text-align:center; z-index:1000; width:90%; max-width:400px; max-height:80vh; overflow-y:auto; border:3px solid #0ff; box-shadow:0 0 20px #0ff,0 0 40px #0ff,0 0 60px #0ff; }
+#winnerPopup.show { transform:translate(-50%,-50%) scale(1); }
+#winnerMessage,#winnerDate,#winnerNote,#winnerReturn { margin:5px 0; }
+#winnerNote { font-weight:bold; color:#0ff; }
+#winnerReturn { font-weight:bold; color:#0ff; font-size:clamp(1rem,2.5vw,1.2rem); }
+#legal,#rights { font-size:clamp(0.7rem,2vw,0.9rem); margin:2px 0; color:#0ff; text-shadow:0 0 5px #000,0 0 8px #000; }
+#dailyCounter { margin-top:3px; font-size:clamp(0.8rem,2vw,0.95rem); color:#0ff; text-shadow:0 0 5px #000,0 0 8px #000; }
+@media(max-width:600px){#logoTop{max-width:60%;}#wheelContainer{width:85vw;}button{padding:10px 20px;}}
 </style>
 </head>
 <body>
@@ -102,7 +94,7 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastWinTime: null
 };
 
-// Contadores globales para rotación secuencial de NUEVOS clientes
+// Contadores globales para nuevos clientes
 let globalCashierIndex = parseInt(localStorage.getItem("cashierIndex")) || 0;
 let globalPrizeIndex = parseInt(localStorage.getItem("prizeIndex")) || 0;
 
@@ -124,12 +116,11 @@ function canSpin() {
 
 // Mostrar popup si ya ganó
 function showExistingPrize() {
-  if (userData.lastPrize && userData.lastWinTime) {
+  if(userData.lastPrize && userData.lastWinTime){
     const last = new Date(userData.lastWinTime);
     const now = new Date();
     const diff = now - last;
-
-    if (diff < 24 * 60 * 60 * 1000) {
+    if(diff < 24*60*60*1000){
       winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`;
       winnerDate.textContent = `Fecha y hora: ${last.toLocaleString()}`;
       popup.classList.add('show');
@@ -141,12 +132,12 @@ function showExistingPrize() {
         const msg = encodeURIComponent(
           `Hola ${userData.assignedCashier.nombre}! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
         );
-        window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, "_blank");
+        window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,"_blank");
       };
     } else {
       userData.lastPrize = null;
       userData.lastWinTime = null;
-      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem('userData', JSON.stringify(userData));
       popup.classList.remove("show");
       spinBtn.disabled = false;
       dailyCounter.textContent = '';
@@ -157,18 +148,12 @@ function showExistingPrize() {
 // Contador regresivo
 function updateCounter(msLeft){
   const interval = setInterval(()=>{
-    if(msLeft <= 0){
-      dailyCounter.textContent = '';
-      spinBtn.disabled = false;
-      clearInterval(interval);
-      popup.classList.remove('show');
-      return;
-    }
+    if(msLeft <=0){ dailyCounter.textContent=''; spinBtn.disabled=false; clearInterval(interval); popup.classList.remove('show'); return; }
     const hours = Math.floor(msLeft/(1000*60*60));
     const minutes = Math.floor((msLeft%(1000*60*60))/(1000*60));
     const seconds = Math.floor((msLeft%(1000*60))/1000);
     dailyCounter.textContent = `Siguiente giro en: ${hours}h ${minutes}m ${seconds}s`;
-    msLeft -= 1000;
+    msLeft -=1000;
   },1000);
 }
 
@@ -225,17 +210,16 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  // 🔄 ASIGNACIÓN FIJA DE CAJERO POR CLIENTE
+  // ASIGNAR CAJERO FIJO PARA CLIENTE
   if(!userData.assignedCashier){
-    // Nuevo cliente: asigna cajero de rotación
     userData.assignedCashier = cashiers[globalCashierIndex];
-    globalCashierIndex = (globalCashierIndex + 1) % cashiers.length;
+    globalCashierIndex = (globalCashierIndex +1) % cashiers.length;
     localStorage.setItem("cashierIndex", globalCashierIndex);
   }
 
   // Premio secuencial
   const prize = prizes[globalPrizeIndex];
-  globalPrizeIndex = (globalPrizeIndex + 1) % prizes.length;
+  globalPrizeIndex = (globalPrizeIndex +1) % prizes.length;
   localStorage.setItem("prizeIndex", globalPrizeIndex);
 
   userData.lastPrize = prize;
@@ -253,7 +237,7 @@ spinBtn.addEventListener('click', ()=>{
       const msg = encodeURIComponent(
         `Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
       );
-      window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, '_blank');
+      window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
     };
   });
 });
