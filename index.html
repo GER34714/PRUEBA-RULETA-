@@ -13,7 +13,6 @@
 <meta property="og:site_name" content="FORTUNA PLAY™">
 
 <style>
-/* --- mismos estilos que tu versión --- */
 body {
   margin: 0;
   font-family: Arial Black, sans-serif;
@@ -112,7 +111,6 @@ button {
   font-size: clamp(1rem, 3vw, 1.4rem);
   text-align: center;
   z-index: 1000;
-  text-shadow: 0 0 5px #000, 0 0 8px #000;
   width: 90%;
   max-width: 400px;
   max-height: 80vh;
@@ -171,13 +169,13 @@ button {
 <script>
 // Premios y cajeros
 const prizes = [
-  "10% extra (con carga minima)",
-  "15% extra (con carga minima)",
-  "20% extra (con carga minima)",
+  "10% extra (con carga min)",
+  "15% extra (con carga min)",
+  "20% extra (con carga min)",
   "30% extra (en mi 2da carga)",
-  "800 fichas (sin carga,no retirables.)",
-  "600 fichas (sin carga,no retirables.)",
-  "300 fichas (sin carga ,no retirables.)"
+  "1000 fichas (sin carga,no ret.)",
+  "500 fichas (sin carga,no ret.)",
+  "300 fichas (sin carga ,no ret.)"
 ];
 
 const cashiers = [
@@ -192,8 +190,9 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastWinTime: null
 };
 
-// --- contador global para rotación secuencial ---
-let globalIndex = parseInt(localStorage.getItem("cashierIndex")) || 0;
+// Contadores globales para rotación secuencial
+let globalCashierIndex = parseInt(localStorage.getItem("cashierIndex")) || 0;
+let globalPrizeIndex = parseInt(localStorage.getItem("prizeIndex")) || 0;
 
 // Elementos
 const spinBtn = document.getElementById('spinButton');
@@ -230,10 +229,7 @@ function showExistingPrize() {
         const msg = encodeURIComponent(
           `Hola ${userData.assignedCashier.nombre}! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
         );
-        window.open(
-          `https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,
-          "_blank"
-        );
+        window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, "_blank");
       };
     } else {
       userData = { lastPrize: null, assignedCashier: null, lastWinTime: null };
@@ -316,18 +312,21 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  // 🔄 Asignar cajero secuencial solo la primera vez
+  // Asignar cajero secuencial
   if(!userData.assignedCashier){
-    userData.assignedCashier = cashiers[globalIndex];
-    globalIndex = (globalIndex + 1) % cashiers.length;
-    localStorage.setItem("cashierIndex", globalIndex);
+    userData.assignedCashier = cashiers[globalCashierIndex];
+    globalCashierIndex = (globalCashierIndex + 1) % cashiers.length;
+    localStorage.setItem("cashierIndex", globalCashierIndex);
   }
 
-  // Premios aleatorios
-  const prize = prizes[Math.floor(Math.random()*prizes.length)];
+  // Asignar premio secuencial
+  const prize = prizes[globalPrizeIndex];
   userData.lastPrize = prize;
   userData.lastWinTime = new Date().toISOString();
   localStorage.setItem('userData', JSON.stringify(userData));
+
+  globalPrizeIndex = (globalPrizeIndex + 1) % prizes.length;
+  localStorage.setItem("prizeIndex", globalPrizeIndex);
 
   const prizeIndex = prizes.indexOf(prize);
   spinWheel(prizeIndex, ()=>{
