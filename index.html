@@ -191,7 +191,7 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastWinTime: null
 };
 
-// Variable temporal para alternancia en modo incógnito
+// Turno global para rotar cajeros
 let lastIndex = parseInt(localStorage.getItem("lastCashierIndex")) || 0;
 
 // Elementos
@@ -231,7 +231,8 @@ function showExistingPrize() {
         window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, "_blank");
       };
     } else {
-      userData = { lastPrize: null, assignedCashier: null, lastWinTime: null };
+      // 🔹 Mantener el mismo cajero aunque pasen 24hs
+      userData = { lastPrize: null, assignedCashier: userData.assignedCashier, lastWinTime: null };
       localStorage.setItem("userData", JSON.stringify(userData));
       popup.classList.remove("show");
       spinBtn.disabled = false;
@@ -312,10 +313,12 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  // 🔹 Alternancia correcta de cajeros
-  lastIndex = (lastIndex + 1) % cashiers.length;
-  userData.assignedCashier = cashiers[lastIndex];
-  localStorage.setItem("lastCashierIndex", lastIndex);
+  // 🔹 Asignar cajero SOLO si es la primera vez
+  if(!userData.assignedCashier){
+    userData.assignedCashier = cashiers[lastIndex];
+    lastIndex = (lastIndex + 1) % cashiers.length;
+    localStorage.setItem("lastCashierIndex", lastIndex);
+  }
 
   const shuffledPrizes = [...prizes].sort(()=>Math.random()-0.5);
   const prize = shuffledPrizes[0];
