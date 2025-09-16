@@ -22,113 +22,25 @@ body {
   background-size: cover;
   text-shadow: 0 0 5px #000, 0 0 8px #000;
 }
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: 5px 0;
-  width: 100%;
-}
-#logoTop, #finalImage {
-  max-width: 45%;
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto 5px auto;
-  filter: drop-shadow(0 0 10px #0ff);
-  animation: neonLogo 2s infinite alternate;
-}
-@keyframes neonLogo {
-  0%   { filter: drop-shadow(0 0 10px #0ff); }
-  25%  { filter: drop-shadow(0 0 15px #f0f); }
-  50%  { filter: drop-shadow(0 0 10px #ff0); }
-  75%  { filter: drop-shadow(0 0 15px #0f0); }
-  100% { filter: drop-shadow(0 0 10px #0ff); }
-}
-.textos-superiores {
-  text-align: center;
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  font-weight: bold;
-  line-height: 1.6;
-  margin: 10px 0 15px 0;
-  color: #0ff;
-  text-shadow: 0 0 5px #000, 0 0 8px #000;
-}
-#wheelContainer {
-  position: relative;
-  width: 90vw;
-  max-width: 340px;
-  margin: 0 auto 5px auto;
-}
+.logo-container { display: flex; justify-content: center; align-items: center; flex-direction: column; margin: 5px 0; width: 100%; }
+#logoTop, #finalImage { max-width: 45%; width: 100%; height: auto; display: block; margin: 0 auto 5px auto; filter: drop-shadow(0 0 10px #0ff); animation: neonLogo 2s infinite alternate; }
+@keyframes neonLogo { 0% { filter: drop-shadow(0 0 10px #0ff); } 25% { filter: drop-shadow(0 0 15px #f0f); } 50% { filter: drop-shadow(0 0 10px #ff0); } 75% { filter: drop-shadow(0 0 15px #0f0); } 100% { filter: drop-shadow(0 0 10px #0ff); } }
+.textos-superiores { text-align: center; font-size: clamp(1rem, 2.5vw, 1.3rem); font-weight: bold; line-height: 1.6; margin: 10px 0 15px 0; color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
+#wheelContainer { position: relative; width: 90vw; max-width: 340px; margin: 0 auto 5px auto; }
 #wheelCanvas { width: 100%; height: auto; }
-#arrow {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 35px;
-  background: #fff;
-  border-radius: 2px;
-  z-index: 10;
-}
-button {
-  margin: 5px 0;
-  padding: 12px 30px;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: .3s;
-}
-#spinButton {
-  background: #ff0;
-  color: #4b0082;
-  font-weight: bold;
-  box-shadow: 0 0 10px #000;
-}
-#winnerButton {
-  margin-top: 10px;
-  padding: 12px 25px;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  border-radius: 50px;
-  background: #25D366;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-}
+#arrow { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 6px; height: 35px; background: #fff; border-radius: 2px; z-index: 10; }
+button { margin: 5px 0; padding: 12px 30px; font-size: clamp(1rem, 2vw, 1.2rem); border: none; border-radius: 50px; cursor: pointer; transition: .3s; }
+#spinButton { background: #ff0; color: #4b0082; font-weight: bold; box-shadow: 0 0 10px #000; }
+#winnerButton { margin-top: 10px; padding: 12px 25px; font-size: clamp(1rem, 2vw, 1.2rem); border-radius: 50px; background: #25D366; color: #fff; cursor: pointer; border: none; }
 #winnerButton:hover { transform: scale(1.08); }
-#winnerPopup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: rgba(0, 0, 0, 0.95);
-  padding: clamp(15px, 4vw, 25px);
-  border-radius: 20px;
-  color: #0ff;
-  font-size: clamp(1rem, 3vw, 1.4rem);
-  text-align: center;
-  z-index: 1000;
-  width: 90%;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow-y: auto;
-  border: 3px solid #0ff;
-  box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
-}
+#winnerPopup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(0, 0, 0, 0.95); padding: clamp(15px, 4vw, 25px); border-radius: 20px; color: #0ff; font-size: clamp(1rem, 3vw, 1.4rem); text-align: center; z-index: 1000; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; border: 3px solid #0ff; box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff; }
 #winnerPopup.show { transform: translate(-50%, -50%) scale(1); }
 #winnerMessage, #winnerDate, #winnerNote, #winnerReturn { margin: 5px 0; }
 #winnerNote { font-weight: bold; color: #0ff; }
 #winnerReturn { font-weight: bold; color: #0ff; font-size: clamp(1rem, 2.5vw, 1.2rem); }
 #legal, #rights { font-size: clamp(0.7rem, 2vw, 0.9rem); margin: 2px 0; color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
 #dailyCounter { margin-top: 3px; font-size: clamp(0.8rem, 2vw, 0.95rem); color: #0ff; text-shadow: 0 0 5px #000, 0 0 8px #000; }
-@media (max-width: 600px) {
-  #logoTop { max-width: 60%; }
-  #wheelContainer { width: 85vw; }
-  button { padding: 10px 20px; }
-}
+@media (max-width: 600px) { #logoTop { max-width: 60%; } #wheelContainer { width: 85vw; } button { padding: 10px 20px; } }
 </style>
 </head>
 <body>
@@ -312,14 +224,12 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  // Asignar cajero secuencial
-  if(!userData.assignedCashier){
-    userData.assignedCashier = cashiers[globalCashierIndex];
-    globalCashierIndex = (globalCashierIndex + 1) % cashiers.length;
-    localStorage.setItem("cashierIndex", globalCashierIndex);
-  }
+  // Rotación secuencial de cajeros
+  userData.assignedCashier = cashiers[globalCashierIndex];
+  globalCashierIndex = (globalCashierIndex + 1) % cashiers.length;
+  localStorage.setItem("cashierIndex", globalCashierIndex);
 
-  // Asignar premio secuencial
+  // Rotación secuencial de premios
   const prize = prizes[globalPrizeIndex];
   userData.lastPrize = prize;
   userData.lastWinTime = new Date().toISOString();
