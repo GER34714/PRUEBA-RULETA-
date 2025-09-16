@@ -207,6 +207,7 @@ const popup = document.getElementById('winnerPopup');
 const winnerMsg = document.getElementById('winnerMessage');
 const winnerDate = document.getElementById('winnerDate');
 const winnerBtn = document.getElementById('winnerButton');
+const dailyCounter = document.getElementById('dailyCounter');
 
 // Verifica 24 hs
 function canSpin() {
@@ -218,16 +219,56 @@ function canSpin() {
 
 // Mostrar popup si ya ganó
 function showExistingPrize() {
-  if(userData.lastPrize && userData.lastWinTime){
-    winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`;
-    winnerDate.textContent = `Fecha y hora: ${new Date(userData.lastWinTime).toLocaleString()}`;
-    popup.classList.add('show');
-    spinBtn.disabled = !canSpin();
-    winnerBtn.onclick = ()=>{
-      const msg = encodeURIComponent(`Hola ${userData.assignedCashier.nombre}! Gané ${userData.lastPrize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`);
-      window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
-    };
+  if (userData.lastPrize && userData.lastWinTime) {
+    const last = new Date(userData.lastWinTime);
+    const now = new Date();
+    const diff = now - last;
+
+    if (diff < 24 * 60 * 60 * 1000) {
+      // Todavía no pasaron 24 hs → mostrar popup y contador
+      winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`;
+      winnerDate.textContent = `Fecha y hora: ${last.toLocaleString()}`;
+      popup.classList.add('show');
+      spinBtn.disabled = true;
+
+      updateCounter(24*60*60*1000 - diff);
+
+      winnerBtn.onclick = () => {
+        const msg = encodeURIComponent(
+          `Hola ${userData.assignedCashier.nombre}! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
+        );
+        window.open(
+          `https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,
+          "_blank"
+        );
+      };
+    } else {
+      // Ya pasaron 24 hs → resetear datos y ocultar popup
+      userData = { lastPrize: null, assignedCashier: null, lastWinTime: null };
+      localStorage.setItem("userData", JSON.stringify(userData));
+      popup.classList.remove("show");
+      spinBtn.disabled = false;
+      dailyCounter.textContent = '';
+    }
   }
+}
+
+// Contador regresivo opcional
+function updateCounter(msLeft){
+  const interval = setInterval(()=>{
+    if(msLeft <= 0){
+      dailyCounter.textContent = '';
+      spinBtn.disabled = false;
+      clearInterval(interval);
+      popup.classList.remove('show');
+      return;
+    }
+    const hours = Math.floor(msLeft/(1000*60*60));
+    const minutes = Math.floor((msLeft%(1000*60*60))/(1000*60));
+    const seconds = Math.floor((msLeft%(1000*60))/1000);
+    dailyCounter.textContent = `Siguiente giro en: ${hours}h ${minutes}m ${seconds}s`;
+    msLeft -= 1000;
+  },1000);
 }
 
 // Rueda de la fortuna
@@ -299,6 +340,8 @@ spinBtn.addEventListener('click', ()=>{
     winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`;
     winnerDate.textContent = `Fecha y hora: ${new Date(userData.lastWinTime).toLocaleString()}`;
     popup.classList.add('show');
+    updateCounter(24*60*60*1000); // Inicia contador de 24 hs
+
     winnerBtn.onclick = ()=>{
       const msg = encodeURIComponent(`Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`);
       window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
