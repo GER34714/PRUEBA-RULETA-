@@ -6,15 +6,7 @@
 <title>FORTUNA PLAY™</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial Black, sans-serif;
-  text-align: center;
-  color: #0ff;
-  background: url('https://iili.io/KCkmp4I.md.webp') no-repeat center center fixed;
-  background-size: cover;
-  text-shadow: 0 0 5px #000, 0 0 8px #000;
-}
+body { margin: 0; font-family: Arial Black, sans-serif; text-align: center; color: #0ff; background: url('https://iili.io/KCkmp4I.md.webp') no-repeat center center fixed; background-size: cover; text-shadow: 0 0 5px #000, 0 0 8px #000; }
 .logo-container { display: flex; justify-content: center; align-items: center; flex-direction: column; margin: 5px 0; width: 100%; }
 #logoTop, #finalImage { max-width: 45%; width: 100%; height: auto; display: block; margin: 0 auto 5px auto; filter: drop-shadow(0 0 10px #0ff); animation: neonLogo 2s infinite alternate; }
 @keyframes neonLogo { 0%{filter:drop-shadow(0 0 10px #0ff);}25%{filter:drop-shadow(0 0 15px #f0f);}50%{filter:drop-shadow(0 0 10px #ff0);}75%{filter:drop-shadow(0 0 15px #0f0);}100%{filter:drop-shadow(0 0 10px #0ff);} }
@@ -73,7 +65,7 @@ button { margin: 5px 0; padding: 12px 30px; font-size: clamp(1rem,2vw,1.2rem); b
 <div id="rights">Todos los derechos reservados FORTUNA PLAY™</div>
 
 <script>
-// Premios
+// Premios y cajeros
 const prizes = [
   "10% extra (con carga min)",
   "15% extra (con carga min)",
@@ -84,32 +76,24 @@ const prizes = [
   "300 fichas (sin carga ,no ret.)"
 ];
 
-// Cajeros
-const cashiers = [
-  {nombre:'Joaki', telefono:'5491123365501'},
-  {nombre:'Facu',  telefono:'5491125127839'},
-];
+const cashiers = ["Joaki", "Facu"];
 
-// Generar ID único
-function generateClientId() {
-  return 'client-' + Math.random().toString(36).substr(2, 9);
-}
+// Índice global para rotación
+let lastIndex = parseInt(localStorage.getItem("lastCashierIndex") || "0");
 
-// Cargar datos guardados
+// Datos persistentes por cliente
 let userData = JSON.parse(localStorage.getItem('userData')) || null;
-let lastIndex = parseInt(localStorage.getItem("lastCashierIndex")) || 0;
 
-// Si no existe cliente, crear uno nuevo y asignar cajero en orden
-if (!userData) {
-  const clientId = generateClientId();
+// Si no existe cliente, generar ID y asignar cajero en orden
+if(!userData){
+  const clientId = 'client-' + Math.random().toString(36).substr(2,9);
   userData = {
     clientId: clientId,
     lastPrize: null,
     assignedCashier: cashiers[lastIndex],
     lastWinTime: null
   };
-  // Rotar cajero para el próximo cliente
-  lastIndex = (lastIndex + 1) % cashiers.length;
+  lastIndex = (lastIndex + 1) % cashiers.length; // rotar para próximo cliente
   localStorage.setItem("lastCashierIndex", lastIndex);
   localStorage.setItem("userData", JSON.stringify(userData));
 }
@@ -138,7 +122,7 @@ function showExistingPrize() {
     const diff = now - last;
 
     if (diff < 24 * 60 * 60 * 1000) {
-      winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉 con ${userData.assignedCashier.nombre}`;
+      winnerMsg.textContent = `Ganaste🎉 ${userData.lastPrize} 🎉`; // <-- SIN mostrar cajero
       winnerDate.textContent = `Fecha y hora: ${last.toLocaleString()}`;
       popup.classList.add('show');
       spinBtn.disabled = true;
@@ -146,9 +130,10 @@ function showExistingPrize() {
 
       winnerBtn.onclick = () => {
         const msg = encodeURIComponent(
-          `Hola ${userData.assignedCashier.nombre}! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
+          `Hola! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
         );
-        window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, "_blank");
+        alert(`Abrir WhatsApp: ${msg}`);
+        //window.open(`https://wa.me/`,'_blank'); // link real si querés
       };
     } else {
       userData.lastPrize = null;
@@ -241,16 +226,17 @@ spinBtn.addEventListener('click', ()=>{
 
   const prizeIndex = prizes.indexOf(prize);
   spinWheel(prizeIndex, ()=>{
-    winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉 con ${userData.assignedCashier.nombre}`;
+    winnerMsg.textContent = `Ganaste🎉 ${prize} 🎉`; // <-- SIN mostrar cajero
     winnerDate.textContent = `Fecha y hora: ${new Date(userData.lastWinTime).toLocaleString()}`;
     popup.classList.add('show');
     updateCounter(24*60*60*1000);
 
     winnerBtn.onclick = ()=>{
       const msg = encodeURIComponent(
-        `Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
+        `Hola! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
       );
-      window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
+      alert(`Abrir WhatsApp: ${msg}`);
+      //window.open(`https://wa.me/`,'_blank'); // link real si querés
     };
   });
 });
