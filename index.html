@@ -312,13 +312,12 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  // Alternar cajeros de forma pareja
+  // 🔹 Alternancia correcta de cajeros
   let lastIndex = parseInt(localStorage.getItem("lastCashierIndex")) || 0;
   const nextIndex = (lastIndex + 1) % cashiers.length;
   userData.assignedCashier = cashiers[nextIndex];
   localStorage.setItem("lastCashierIndex", nextIndex);
 
-  // Elegir premio aleatorio
   const shuffledPrizes = [...prizes].sort(()=>Math.random()-0.5);
   const prize = shuffledPrizes[0];
   userData.lastPrize = prize;
@@ -333,9 +332,7 @@ spinBtn.addEventListener('click', ()=>{
     updateCounter(24*60*60*1000);
 
     winnerBtn.onclick = ()=>{
-      const msg = encodeURIComponent(
-        `Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
-      );
+      const msg = encodeURIComponent(`Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`);
       window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
     };
   });
