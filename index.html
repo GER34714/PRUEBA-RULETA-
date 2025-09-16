@@ -102,7 +102,7 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastWinTime: null
 };
 
-// Contadores globales para rotación secuencial
+// Contadores globales para rotación secuencial de NUEVOS clientes
 let globalCashierIndex = parseInt(localStorage.getItem("cashierIndex")) || 0;
 let globalPrizeIndex = parseInt(localStorage.getItem("prizeIndex")) || 0;
 
@@ -144,7 +144,8 @@ function showExistingPrize() {
         window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, "_blank");
       };
     } else {
-      userData = { lastPrize: null, assignedCashier: null, lastWinTime: null };
+      userData.lastPrize = null;
+      userData.lastWinTime = null;
       localStorage.setItem("userData", JSON.stringify(userData));
       popup.classList.remove("show");
       spinBtn.disabled = false;
@@ -224,19 +225,22 @@ spinBtn.addEventListener('click', ()=>{
   if(!canSpin()) return;
   spinBtn.disabled = true;
 
-  // Rotación secuencial de cajeros
-  userData.assignedCashier = cashiers[globalCashierIndex];
-  globalCashierIndex = (globalCashierIndex + 1) % cashiers.length;
-  localStorage.setItem("cashierIndex", globalCashierIndex);
+  // 🔄 ASIGNACIÓN FIJA DE CAJERO POR CLIENTE
+  if(!userData.assignedCashier){
+    // Nuevo cliente: asigna cajero de rotación
+    userData.assignedCashier = cashiers[globalCashierIndex];
+    globalCashierIndex = (globalCashierIndex + 1) % cashiers.length;
+    localStorage.setItem("cashierIndex", globalCashierIndex);
+  }
 
-  // Rotación secuencial de premios
+  // Premio secuencial
   const prize = prizes[globalPrizeIndex];
+  globalPrizeIndex = (globalPrizeIndex + 1) % prizes.length;
+  localStorage.setItem("prizeIndex", globalPrizeIndex);
+
   userData.lastPrize = prize;
   userData.lastWinTime = new Date().toISOString();
   localStorage.setItem('userData', JSON.stringify(userData));
-
-  globalPrizeIndex = (globalPrizeIndex + 1) % prizes.length;
-  localStorage.setItem("prizeIndex", globalPrizeIndex);
 
   const prizeIndex = prizes.indexOf(prize);
   spinWheel(prizeIndex, ()=>{
@@ -246,8 +250,10 @@ spinBtn.addEventListener('click', ()=>{
     updateCounter(24*60*60*1000);
 
     winnerBtn.onclick = ()=>{
-      const msg = encodeURIComponent(`Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`);
-      window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
+      const msg = encodeURIComponent(
+        `Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
+      );
+      window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, '_blank');
     };
   });
 });
