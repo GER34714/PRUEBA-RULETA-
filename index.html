@@ -191,6 +191,9 @@ let userData = JSON.parse(localStorage.getItem('userData')) || {
   lastWinTime: null
 };
 
+// Variable temporal para alternancia en modo incógnito
+let lastIndex = parseInt(localStorage.getItem("lastCashierIndex")) || 0;
+
 // Elementos
 const spinBtn = document.getElementById('spinButton');
 const popup = document.getElementById('winnerPopup');
@@ -225,10 +228,7 @@ function showExistingPrize() {
         const msg = encodeURIComponent(
           `Hola ${userData.assignedCashier.nombre}! Gané ${userData.lastPrize} el ${last.toLocaleString()} y quisiera reclamarlo.`
         );
-        window.open(
-          `https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,
-          "_blank"
-        );
+        window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`, "_blank");
       };
     } else {
       userData = { lastPrize: null, assignedCashier: null, lastWinTime: null };
@@ -313,10 +313,9 @@ spinBtn.addEventListener('click', ()=>{
   spinBtn.disabled = true;
 
   // 🔹 Alternancia correcta de cajeros
-  let lastIndex = parseInt(localStorage.getItem("lastCashierIndex")) || 0;
-  const nextIndex = (lastIndex + 1) % cashiers.length;
-  userData.assignedCashier = cashiers[nextIndex];
-  localStorage.setItem("lastCashierIndex", nextIndex);
+  lastIndex = (lastIndex + 1) % cashiers.length;
+  userData.assignedCashier = cashiers[lastIndex];
+  localStorage.setItem("lastCashierIndex", lastIndex);
 
   const shuffledPrizes = [...prizes].sort(()=>Math.random()-0.5);
   const prize = shuffledPrizes[0];
@@ -332,7 +331,9 @@ spinBtn.addEventListener('click', ()=>{
     updateCounter(24*60*60*1000);
 
     winnerBtn.onclick = ()=>{
-      const msg = encodeURIComponent(`Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`);
+      const msg = encodeURIComponent(
+        `Hola ${userData.assignedCashier.nombre}! Gané ${prize} el ${new Date(userData.lastWinTime).toLocaleString()} y quisiera reclamarlo.`
+      );
       window.open(`https://wa.me/${userData.assignedCashier.telefono}?text=${msg}`,'_blank');
     };
   });
